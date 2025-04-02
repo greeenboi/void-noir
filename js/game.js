@@ -826,7 +826,6 @@ class SQLDetectiveGame {
   drawHallwayScene(width, height) {
     if (this.assets.hallway) {
       const imgAspectRatio = this.assets.hallway.width / this.assets.hallway.height;
-      const canvasAspectRatio = width / height;
 
       let drawWidth = width;
       let drawHeight = width / imgAspectRatio;
