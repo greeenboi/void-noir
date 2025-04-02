@@ -157,7 +157,7 @@ const gameCases = [
 				validateFn: (result, expectedResult) => {
 					// Improved validation checking for exact columns and all rows
 					return (
-						result.rows.length === 13 && // Total number of guests
+						result.rows.length === 11 && // Total number of guests
 						"name" in result.rows[0] &&
 						"relationship" in result.rows[0] &&
 						"invitation_status" in result.rows[0]
