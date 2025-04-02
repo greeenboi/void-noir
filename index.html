@@ -56,7 +56,7 @@
                     </div>
                     <div class="right-panel">
                         <div id="sqlEditor">
-                            <div class="editor-container">
+                            <div class="editor-container" style="display: flex; flex-direction: row;">
                                 <div class="editor-header">
                                     <div class="editor-title">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -69,8 +69,7 @@
                                         SQL Query
                                     </div>
                                 </div>
-                                <textarea id="sqlInput" spellcheck="false">SELECT * FROM table;</textarea>
-                                <pre class="language-sql"><code id="sqlHighlight"></code></pre>
+                                <textarea id="sqlInput" spellcheck="false" style="flex: 1;">SELECT * FROM table;</textarea>
                             </div>
                             <div class="editor-controls">
                                 <button id="runQuery" class="btn btn-primary">
