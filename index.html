@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noir SQL - Detective Game</title>
+    <title>Void Noir - A Detective Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="public/favicon.ico" type="image/x-icon">
     <style>
@@ -19,6 +22,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
@@ -27,7 +31,8 @@
                 <h2>SQL Detective: Case Files</h2>
                 <div class="controls">
                     <button id="helpButton" class="btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                             <line x1="12" y1="17" x2="12" y2="17"></line>
@@ -35,7 +40,8 @@
                         Help
                     </button>
                     <button id="closeButton" class="btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
@@ -60,7 +66,8 @@
                             <div class="editor-container" style="display: flex; flex-direction: row;">
                                 <div class="editor-header">
                                     <div class="editor-title">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                             <polyline points="14 2 14 8 20 8"></polyline>
                                             <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -70,11 +77,13 @@
                                         SQL Query
                                     </div>
                                 </div>
-                                <textarea id="sqlInput" spellcheck="false" style="flex: 1;">SELECT * FROM table;</textarea>
+                                <textarea id="sqlInput" spellcheck="false"
+                                    style="flex: 1;">SELECT * FROM table;</textarea>
                             </div>
                             <div class="editor-controls">
                                 <button id="runQuery" class="btn btn-primary">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <polygon points="5 3 19 12 5 21 5 3"></polygon>
                                     </svg>
                                     Run Query
@@ -89,7 +98,8 @@
                         <div id="queryResult">
                             <div class="result-header">
                                 <div class="result-title">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                                     </svg>
                                     Query Results
@@ -97,7 +107,9 @@
                             </div>
                             <div class="result-content" style="max-height: 400px; overflow-y: auto;">
                                 <div class="info-message message">
-                                    <svg style="width: auto; height: 32px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg style="width: auto; height: 32px;" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -111,7 +123,8 @@
             </div>
             <div class="power-button-container">
                 <button id="returnButton" class="power-button" title="Return to Office">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                         <line x1="12" y1="2" x2="12" y2="12"></line>
                     </svg>
@@ -122,20 +135,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@littlejs/core@0.1.0/dist/little.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js" type="module"></script>
-    
+
     <script src="js/prism.js"></script>
     <script>
         if (typeof Prism === 'undefined') {
             console.error('Prism failed to load!');
         }
     </script>
-    
+
     <script src="js/database.js" type="module"></script>
     <script src="js/cases.js" type="module"></script>
     <script src="js/game.js" type="module"></script>
-    
+
     <script>
-        document.getElementById('sqlInput').addEventListener('keydown', function(e) {
+        document.getElementById('sqlInput').addEventListener('keydown', function (e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault();
                 document.getElementById('runQuery').click();
@@ -143,4 +156,5 @@
         });
     </script>
 </body>
+
 </html>
