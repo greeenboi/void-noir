@@ -3,7 +3,7 @@
 ## Image Files Needed:
 1. **detective.png**: Noir-style detective character silhouette (recommended size: 600x800px)
 2. **husband.png**: Male character for cutscenes (recommended size: 400x600px)
-3. **wife.png**: Female character for cutscenes (recommended size: 400x600px)
+3. **wife.png**: Female character for cutscenes (recommended size: 400x600px) 
 4. **night_city.png**: Dark city skyline background (recommended size: 1920x1080px)
 5. **office.png**: Detective's office background (recommended size: 1920x1080px)
 6. **office_interior.png**: Interior office scene for cutscenes (recommended size: 1920x1080px)
