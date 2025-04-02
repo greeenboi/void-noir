@@ -1,736 +1,760 @@
 /* Base styles */
 :root {
-  --primary-color: #4285f4;
-  --primary-dark: #3367d6;
-  --secondary-color: #50fa7b;
-  --error-color: #dc3545;
-  --warning-color: #ffc107;
-  --success-color: #28a745;
-  --info-color: #17a2b8;
-  --dark-bg: #1a1a1a;
-  --panel-bg: #2d2d2d;
-  --panel-header: #333;
-  --text-color: #f0f0f0;
-  --border-radius: 8px;
+	--primary-color: #4285f4;
+	--primary-dark: #3367d6;
+	--secondary-color: #50fa7b;
+	--error-color: #dc3545;
+	--warning-color: #ffc107;
+	--success-color: #28a745;
+	--info-color: #17a2b8;
+	--dark-bg: #1a1a1a;
+	--panel-bg: #2d2d2d;
+	--panel-header: #333;
+	--text-color: #f0f0f0;
+	--border-radius: 8px;
 }
 
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: var(--dark-bg);
-    font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
-    color: var(--text-color);
-    line-height: 1.6;
+body,
+html {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: var(--dark-bg);
+	font-family: "Inter", "Segoe UI", "Arial", sans-serif;
+	color: var(--text-color);
+	line-height: 1.6;
 }
 
 /* Game container */
 #gameContainer {
-    position: relative;
-    width: 100%;
-    height: 100%;
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 
 #gameCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 /* SQL Interface */
 #sqlInterface {
-    padding: 0;
-    background: rgba(15, 15, 15, 0.95);
-    color: white;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 95%;
-    max-width: 1600px; /* Increased from 1200px */
-    height: 90vh; /* Set explicit height */
-    border-radius: var(--border-radius);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+	padding: 0;
+	background: rgba(15, 15, 15, 0.95);
+	color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 95%;
+	max-width: 1600px; /* Increased from 1200px */
+	height: 90vh; /* Set explicit height */
+	border-radius: var(--border-radius);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #sqlInterface .header {
-    background: var(--panel-header);
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--panel-header);
+	padding: 12px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #sqlInterface .header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 500;
+	margin: 0;
+	font-size: 18px;
+	font-weight: 500;
 }
 
 #sqlInterface .header .controls {
-    display: flex;
-    gap: 10px;
+	display: flex;
+	gap: 10px;
 }
 
 #sqlInterface.hidden {
-    display: none;
+	display: none;
 }
 
 .interface-content {
-    padding: 20px;
-    flex: 1;
-    height: calc(90vh - 52px); /* Adjust for header height */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+	padding: 20px;
+	flex: 1;
+	height: calc(90vh - 52px); /* Adjust for header height */
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 .interface-grid {
-    display: grid;
-    grid-template-columns: minmax(300px, 25%) 1fr; /* Percentage-based with minimum width */
-    gap: 20px;
-    flex: 1;
-    height: 100%;
+	display: grid;
+	grid-template-columns: minmax(300px, 25%) 1fr; /* Percentage-based with minimum width */
+	gap: 20px;
+	flex: 1;
+	height: 100%;
 }
 
 /* Left panel */
 .left-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: 100%;
-    overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 100%;
+	overflow: hidden;
 }
 
 .panel-section {
-    background: var(--panel-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+	background: var(--panel-bg);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 .panel-header {
-    background: var(--panel-header);
-    padding: 12px 15px;
-    font-weight: 500;
-    font-size: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--panel-header);
+	padding: 12px 15px;
+	font-weight: 500;
+	font-size: 16px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .panel-content {
-    padding: 15px;
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
+	padding: 15px;
+	flex: 1;
+	overflow-y: auto;
+	scrollbar-width: thin;
 }
 
 .panel-content::-webkit-scrollbar {
-    width: 6px;
+	width: 6px;
 }
 
 .panel-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 3px;
 }
 
 /* Case description */
 #caseDescription .briefing {
-    padding: 12px;
-    background: rgba(66, 133, 244, 0.1);
-    border-left: 3px solid var(--primary-color);
-    margin: 10px 0;
-    border-radius: 4px;
+	padding: 12px;
+	background: rgba(66, 133, 244, 0.1);
+	border-left: 3px solid var(--primary-color);
+	margin: 10px 0;
+	border-radius: 4px;
 }
 
 #caseDescription .task {
-    padding: 12px;
-    background: rgba(80, 250, 123, 0.1);
-    border-left: 3px solid var(--secondary-color);
-    margin: 10px 0;
-    border-radius: 4px;
+	padding: 12px;
+	background: rgba(80, 250, 123, 0.1);
+	border-left: 3px solid var(--secondary-color);
+	margin: 10px 0;
+	border-radius: 4px;
 }
 
 #caseDescription .hint {
-    padding: 12px;
-    background: rgba(255, 121, 198, 0.1);
-    border-left: 3px solid #ff79c6;
-    margin: 10px 0;
-    border-radius: 4px;
+	padding: 12px;
+	background: rgba(255, 121, 198, 0.1);
+	border-left: 3px solid #ff79c6;
+	margin: 10px 0;
+	border-radius: 4px;
 }
 
 #caseDescription h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-    font-size: 20px;
+	margin-top: 0;
+	color: var(--primary-color);
+	font-size: 20px;
 }
 
 /* Schema display */
 .schema-item {
-    margin-bottom: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    overflow: hidden;
+	margin-bottom: 15px;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+	overflow: hidden;
 }
 
 .schema-item h5 {
-    background: rgba(66, 133, 244, 0.2);
-    color: var(--primary-color);
-    margin: 0;
-    padding: 8px 10px;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	background: rgba(66, 133, 244, 0.2);
+	color: var(--primary-color);
+	margin: 0;
+	padding: 8px 10px;
+	font-size: 14px;
+	font-weight: 500;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .schema-item pre {
-    margin: 0;
-    padding: 10px;
-    font-size: 12px;
-    color: #ddd;
-    overflow-x: auto;
+	margin: 0;
+	padding: 10px;
+	font-size: 12px;
+	color: #ddd;
+	overflow-x: auto;
 }
 
 /* Right panel */
 .right-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: 100%;
-    overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 100%;
+	overflow: hidden;
 }
 
 /* SQL Editor */
 #sqlEditor {
-    flex: 2; /* Give it more space compared to results */
-    display: flex;
-    flex-direction: column;
-    min-height: 0; /* Fix flexbox overflow issues */
+	flex: 2; /* Give it more space compared to results */
+	display: flex;
+	flex-direction: column;
+	min-height: 0; /* Fix flexbox overflow issues */
 }
 
 #sqlEditor .editor-container {
-    position: relative;
-    flex: 1;
-    background: var(--panel-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    margin-bottom: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+	position: relative;
+	flex: 1;
+	background: var(--panel-bg);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+	margin-bottom: 0;
+	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #sqlEditor .editor-header {
-    background: var(--panel-header);
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--panel-header);
+	padding: 10px 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #sqlEditor .editor-title {
-    font-weight: 500;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+	font-weight: 500;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 #sqlEditor .editor-title svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
 }
 
 #sqlInput {
-    position: absolute;
-    top: 45px;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 45px);
-    margin: 0;
-    padding: 15px;
-    border: none;
-    background: transparent;
-    color: rgba(255,255,255,0.9);
-    font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    resize: none;
-    z-index: 1;
-    box-sizing: border-box;
+	position: absolute;
+	top: 45px;
+	left: 0;
+	width: 100%;
+	height: calc(100% - 45px);
+	margin: 0;
+	padding: 15px;
+	border: none;
+	background: transparent;
+	color: rgba(255, 255, 255, 0.9);
+	font-family: "JetBrains Mono", "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+		monospace;
+	font-size: 14px;
+	line-height: 1.5;
+	resize: none;
+	z-index: 1;
+	box-sizing: border-box;
 }
 
 #sqlInput:focus {
-    outline: none;
+	outline: none;
 }
 
 #sqlEditor pre {
-    margin: 0 !important;
-    padding: 45px 0 0 0 !important;
-    background: transparent !important;
-    pointer-events: none;
-    height: 100%;
+	margin: 0 !important;
+	padding: 45px 0 0 0 !important;
+	background: transparent !important;
+	pointer-events: none;
+	height: 100%;
 }
 
 #sqlEditor code {
-    display: block;
-    margin: 0;
-    padding: 15px;
-    background: transparent !important;
-    font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-    font-size: 14px;
-    line-height: 1.5;
+	display: block;
+	margin: 0;
+	padding: 15px;
+	background: transparent !important;
+	font-family: "JetBrains Mono", "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+		monospace;
+	font-size: 14px;
+	line-height: 1.5;
 }
 
 /* SQL Editor controls */
 .editor-controls {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	padding: 10px 0;
+	gap: 10px;
 }
 
 /* Button styles */
 .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--panel-bg);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	background: var(--panel-bg);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 4px;
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
 }
 
 .btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+	background: rgba(255, 255, 255, 0.1);
 }
 
 .btn:active {
-    transform: scale(0.98);
+	transform: scale(0.98);
 }
 
 .btn svg {
-    width: 16px;
-    height: 16px;
+	width: 16px;
+	height: 16px;
 }
 
 .btn-primary {
-    background: var(--primary-color);
-    border-color: var(--primary-dark);
+	background: var(--primary-color);
+	border-color: var(--primary-dark);
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+	background: var(--primary-dark);
 }
 
 .btn-primary.active {
-    transform: scale(0.98);
-    background: var(--primary-dark);
+	transform: scale(0.98);
+	background: var(--primary-dark);
 }
 
 .btn-success {
-    background: var(--success-color);
-    border-color: var(--success-color);
+	background: var(--success-color);
+	border-color: var(--success-color);
 }
 
 .btn-success:hover {
-    background: #218838;
+	background: #218838;
 }
 
 .keyboard-shortcut {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-size: 11px;
-    margin-left: 5px;
-    font-family: 'JetBrains Mono', monospace;
-    vertical-align: middle;
+	display: inline-block;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 3px;
+	padding: 1px 5px;
+	font-size: 11px;
+	margin-left: 5px;
+	font-family: "JetBrains Mono", monospace;
+	vertical-align: middle;
 }
 
 .tooltip {
-    position: relative;
-    display: inline-flex;
+	position: relative;
+	display: inline-flex;
 }
 
 .tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 5px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s;
+	content: attr(data-tooltip);
+	position: absolute;
+	bottom: calc(100% + 5px);
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 5px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.2s;
 }
 
 .tooltip:hover::after {
-    visibility: visible;
-    opacity: 1;
+	visibility: visible;
+	opacity: 1;
 }
 
 /* Query Result */
 #queryResult {
-    background: var(--panel-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    flex: 1; /* Take remaining space */
-    min-height: 200px; /* Ensure minimum height */
-    display: flex;
-    flex-direction: column;
+	background: var(--panel-bg);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+	flex: 1; /* Take remaining space */
+	min-height: 200px; /* Ensure minimum height */
+	display: flex;
+	flex-direction: column;
 }
 
 .result-header {
-    background: var(--panel-header);
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--panel-header);
+	padding: 10px 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .result-title {
-    font-weight: 500;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+	font-weight: 500;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .result-content {
-    padding: 0;
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0; /* Fix flexbox overflow issue */
-    max-height: 100%;
+	padding: 0;
+	overflow-y: auto;
+	flex: 1;
+	min-height: 0; /* Fix flexbox overflow issue */
+	max-height: 100%;
 }
 
 #queryResult table {
-    width: 100%;
-    border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 }
 
-#queryResult th, #queryResult td {
-    padding: 8px 12px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 13px;
+#queryResult th,
+#queryResult td {
+	padding: 8px 12px;
+	text-align: left;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	font-size: 13px;
 }
 
 #queryResult th {
-    background: rgba(255, 255, 255, 0.05);
-    position: sticky;
-    top: 0;
-    font-weight: 500;
+	background: rgba(255, 255, 255, 0.05);
+	position: sticky;
+	top: 0;
+	font-weight: 500;
 }
 
 #queryResult tr:hover td {
-    background: rgba(255, 255, 255, 0.05);
+	background: rgba(255, 255, 255, 0.05);
 }
 
 /* Message displays */
 .message {
-    padding: 15px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+	padding: 15px;
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
 }
 
 .success-message {
-    background: rgba(40, 167, 69, 0.1);
-    border-left: 4px solid var(--success-color);
+	background: rgba(40, 167, 69, 0.1);
+	border-left: 4px solid var(--success-color);
 }
 
 .info-message {
-    background: rgba(23, 162, 184, 0.1);
-    border-left: 4px solid var(--info-color);
+	background: rgba(23, 162, 184, 0.1);
+	border-left: 4px solid var(--info-color);
 }
 
 .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    color: var(--primary-color);
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 30px;
+	color: var(--primary-color);
+	gap: 10px;
 }
 
 .loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(66, 133, 244, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--primary-color);
-    animation: spin 1s infinite linear;
+	width: 20px;
+	height: 20px;
+	border: 2px solid rgba(66, 133, 244, 0.3);
+	border-radius: 50%;
+	border-top-color: var(--primary-color);
+	animation: spin 1s infinite linear;
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .error-container {
-    padding: 15px;
-    background: rgba(220, 53, 69, 0.1);
-    border-left: 4px solid var(--error-color);
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+	padding: 15px;
+	background: rgba(220, 53, 69, 0.1);
+	border-left: 4px solid var(--error-color);
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
 }
 
 .error-icon {
-    font-size: 18px;
+	font-size: 18px;
 }
 
 .error-message h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    color: var(--error-color);
-    font-size: 14px;
-    font-weight: 500;
+	margin-top: 0;
+	margin-bottom: 5px;
+	color: var(--error-color);
+	font-size: 14px;
+	font-weight: 500;
 }
 
 .error-message p {
-    margin: 0;
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    overflow-x: auto;
+	margin: 0;
+	white-space: pre-wrap;
+	font-family: "JetBrains Mono", monospace;
+	font-size: 13px;
+	overflow-x: auto;
 }
 
 /* Token highlighting */
 .token.keyword {
-    color: #ff79c6;
-    font-weight: 600;
+	color: #ff79c6;
+	font-weight: 600;
 }
 
 .token.function {
-    color: var(--secondary-color);
+	color: var(--secondary-color);
 }
 
 .token.string {
-    color: #f1fa8c;
+	color: #f1fa8c;
 }
 
 .token.number {
-    color: #bd93f9;
+	color: #bd93f9;
 }
 
 .token.operator {
-    color: #ff79c6;
+	color: #ff79c6;
 }
 
 .token.comment {
-    color: #6272a4;
-    font-style: italic;
+	color: #6272a4;
+	font-style: italic;
 }
 
 /* Alert system */
 .alert {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 6px;
-    background: var(--panel-bg);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    min-width: 300px;
-    max-width: 500px;
-    transform: translateX(110%);
-    transition: transform 0.3s ease;
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	padding: 15px 20px;
+	border-radius: 6px;
+	background: var(--panel-bg);
+	color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+	z-index: 1000;
+	min-width: 300px;
+	max-width: 500px;
+	transform: translateX(110%);
+	transition: transform 0.3s ease;
 }
 
 .alert.show {
-    transform: translateX(0);
+	transform: translateX(0);
 }
 
 .alert-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
 .alert-icon {
-    font-size: 20px;
+	font-size: 20px;
 }
 
 .alert-close {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 0;
-    margin-left: 15px;
+	background: transparent;
+	border: none;
+	color: #fff;
+	font-size: 20px;
+	cursor: pointer;
+	padding: 0;
+	margin-left: 15px;
 }
 
-.alert-error, .alert-danger {
-    background: rgba(220, 53, 69, 0.95);
-    border-left: 5px solid var(--error-color);
+.alert-error,
+.alert-danger {
+	background: rgba(220, 53, 69, 0.95);
+	border-left: 5px solid var(--error-color);
 }
 
 .alert-success {
-    background: rgba(40, 167, 69, 0.95);
-    border-left: 5px solid var(--success-color);
+	background: rgba(40, 167, 69, 0.95);
+	border-left: 5px solid var(--success-color);
 }
 
 .alert-warning {
-    background: rgba(255, 193, 7, 0.95);
-    border-left: 5px solid var(--warning-color);
+	background: rgba(255, 193, 7, 0.95);
+	border-left: 5px solid var(--warning-color);
 }
 
 .alert-info {
-    background: rgba(23, 162, 184, 0.95);
-    border-left: 5px solid var(--info-color);
+	background: rgba(23, 162, 184, 0.95);
+	border-left: 5px solid var(--info-color);
 }
 
 .keyboard-shortcut-hint {
-    display: inline-block;
-    margin-left: 10px;
-    color: #999;
-    font-size: 12px;
-    font-style: italic;
+	display: inline-block;
+	margin-left: 10px;
+	color: #999;
+	font-size: 12px;
+	font-style: italic;
 }
 
 /* Power button (Return to Office) */
 .power-button-container {
-    position: absolute;
-    left: 20px;
-    bottom: 20px;
-    z-index: 10;
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	z-index: 10;
 }
 
 .power-button {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(220, 53, 69, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: rgba(220, 53, 69, 0.8);
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	padding: 0;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .power-button:hover {
-    background: rgba(220, 53, 69, 1);
-    transform: scale(1.05);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+	background: rgba(220, 53, 69, 1);
+	transform: scale(1.05);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .power-button:active {
-    transform: scale(0.95);
+	transform: scale(0.95);
 }
 
 .power-button svg {
-    width: 24px;
-    height: 24px;
+	width: 24px;
+	height: 24px;
 }
 
 /* Portal effect and transitions */
 @keyframes portalGlow {
-    0% { box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5); }
-    50% { box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.8); }
-    100% { box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5); }
+	0% {
+		box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5);
+	}
+	50% {
+		box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.8);
+	}
+	100% {
+		box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5);
+	}
 }
 
 .portal {
-    position: absolute;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,220,255,0.9));
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    animation: portalGlow 3s infinite;
+	position: absolute;
+	background: linear-gradient(
+		135deg,
+		rgba(255, 255, 255, 0.9),
+		rgba(200, 220, 255, 0.9)
+	);
+	border: 2px solid rgba(255, 255, 255, 0.8);
+	animation: portalGlow 3s infinite;
 }
 
 @keyframes screenFlash {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }
 
 .screen-flash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    z-index: 1000;
-    pointer-events: none;
-    animation: screenFlash 1s forwards;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	z-index: 1000;
+	pointer-events: none;
+	animation: screenFlash 1s forwards;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1100px) {
-    .interface-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-    }
-    
-    .left-panel {
-        height: auto;
-        max-height: 300px;
-    }
-    
-    #sqlInterface {
-        width: 95%;
-        height: 95vh;
-    }
+	.interface-grid {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto 1fr;
+	}
+
+	.left-panel {
+		height: auto;
+		max-height: 300px;
+	}
+
+	#sqlInterface {
+		width: 95%;
+		height: 95vh;
+	}
 }
 
 @media (min-width: 1800px) {
-    #sqlInterface {
-        max-width: 1800px;
-    }
-    
-    #sqlInput, #sqlEditor code {
-        font-size: 16px;
-    }
-    
-    .panel-content {
-        font-size: 15px;
-    }
+	#sqlInterface {
+		max-width: 1800px;
+	}
+
+	#sqlInput,
+	#sqlEditor code {
+		font-size: 16px;
+	}
+
+	.panel-content {
+		font-size: 15px;
+	}
 }
 
 /* Add more vertical space for the editor on tall screens */
 @media (min-height: 900px) {
-    #sqlEditor {
-        flex: 3;
-    }
-    
-    #queryResult {
-        flex: 1;
-    }
+	#sqlEditor {
+		flex: 3;
+	}
+
+	#queryResult {
+		flex: 1;
+	}
 }
