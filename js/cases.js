@@ -155,8 +155,11 @@ const gameCases = [
                     FROM guests
                 `,
         validateFn: (result, expectedResult) => {
-          // Check if all guests are returned
-          return result.rows.length === 13; // Total number of guests in the system
+          // Improved validation checking for exact columns and all rows
+          return result.rows.length === 13 && // Total number of guests
+                 'name' in result.rows[0] && 
+                 'relationship' in result.rows[0] && 
+                 'invitation_status' in result.rows[0];
         },
         difficulty: "easy",
       },
@@ -169,11 +172,18 @@ const gameCases = [
                     WHERE restricted = 1
                 `,
         validateFn: (result, expectedResult) => {
-          // Check if all restricted zones are found
-          return (
-            result.rows.length === 5 && // 5 restricted zones
-            result.rows.every((r) => r.security_level >= 3)
-          ); // All restricted zones have security_level >= 3
+          // More precise validation checking for restricted zones
+          if (result.rows.length !== 5) {
+            return false; // Must find exactly 5 restricted zones
+          }
+          
+          // Check if the correct zones are returned (all with security level >= 3)
+          const expectedZoneNames = ['Kitchen', 'Security Office', 'Master Bedroom', 'Wine Cellar', 'Hunting Trophy Room'];
+          const foundZoneNames = result.rows.map(row => row.zone_name);
+          
+          // Check if all expected zones are found
+          return expectedZoneNames.every(zone => foundZoneNames.includes(zone)) && 
+                 result.rows.every(row => row.security_level >= 3);
         },
         difficulty: "easy",
       },
@@ -296,7 +306,7 @@ const gameCases = [
                       owner_id INTEGER,
                       item_type TEXT NOT NULL,
                       description TEXT NOT NULL,
-                      brought_to_wedding BOOLEAN
+                      brought_to_wedding INTEGER
                   )`,
         insertStatements: [
           `INSERT INTO personal_items VALUES (1, 3, 'Weapon', 'Antique Family Pistol', 1)`,
