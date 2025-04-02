@@ -42,6 +42,10 @@ class SQLDetectiveGame {
       hallway: null,
       manSmall: null,
       titleFont: 'bold 70px "Film Noir"',
+      sounds: {
+        correct: new Audio("audio/right.mp3"),
+        incorrect: new Audio("audio/wrong.mp3"),
+      },
     };
 
     this.loadAssets();
@@ -279,7 +283,16 @@ class SQLDetectiveGame {
             </div>
         </div>`;
 
+    this.playSound("incorrect");
     this.showAlert(`SQL Error: ${error}`, "error");
+  }
+
+  playSound(soundName) {
+    const sound = this.assets.sounds[soundName];
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play().catch((err) => console.error("Error playing sound:", err));
+    }
   }
 
   async checkChallengeSolution(query) {
@@ -297,6 +310,7 @@ class SQLDetectiveGame {
     }
 
     if (currentChallenge.validateFn(userResult, expectedResult)) {
+      this.playSound("correct");
       this.showMessage("Correct! You've solved this part of the case!");
 
       this.currentChallengeIndex++;
@@ -313,7 +327,8 @@ class SQLDetectiveGame {
       return true;
     }
 
-    this.showMessage("That's not quite right. Try again!");
+    this.playSound("incorrect");
+    this.showAlert("That's not quite right. Try again!", "warning");
     return false;
   }
 
