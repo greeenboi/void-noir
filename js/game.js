@@ -1,5 +1,5 @@
-import gameDB from "./database.js";
 import gameCases from "./cases.js";
+import gameDB from "./database.js";
 
 class SQLDetectiveGame {
   constructor() {
@@ -53,8 +53,6 @@ class SQLDetectiveGame {
     }
 
     this.gameCanvas.addEventListener("click", (e) => this.handleCanvasClick(e));
-
-    window.addEventListener("keydown", (e) => this.handleGlobalKeyDown(e));
 
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
@@ -477,13 +475,6 @@ class SQLDetectiveGame {
     requestAnimationFrame(() => this.gameLoop());
   }
 
-  handleGlobalKeyDown(e) {
-    // Advance cutscene when any key is pressed
-    if (this.gameState.scene === "cutscene") {
-      this.advanceCutscene();
-    }
-  }
-
   handleCanvasClick(e) {
     const { width, height } = this.gameCanvas;
     const x = e.clientX;
@@ -492,6 +483,10 @@ class SQLDetectiveGame {
     switch (this.gameState.scene) {
       case "welcome":
         this.startCutscene();
+        break;
+
+      case "cutscene":
+        this.advanceCutscene();
         break;
 
       case "office":
@@ -819,7 +814,7 @@ class SQLDetectiveGame {
     this.ctx.font = "18px Arial";
     this.ctx.fillStyle = `rgba(200, 200, 200, ${pulseIntensity})`;
     this.ctx.textAlign = "right";
-    this.ctx.fillText("Press any key to continue", width - 50, height - 50);
+    this.ctx.fillText("Click to continue", width - 50, height - 50);
   }
 
   drawHallwayScene(width, height) {
