@@ -39,7 +39,7 @@ const gameCases = [
         createStatement: `CREATE TABLE security_zones (
                       zone_id INTEGER PRIMARY KEY,
                       zone_name TEXT NOT NULL,
-                      restricted BOOLEAN NOT NULL,
+                      restricted INTEGER NOT NULL,
                       security_level INTEGER NOT NULL
                   )`,
         insertStatements: [
@@ -61,7 +61,7 @@ const gameCases = [
                       log_id INTEGER PRIMARY KEY,
                       guest_id INTEGER,
                       zone_id INTEGER,
-                      timestamp DATETIME NOT NULL,
+                      timestamp TIMESTAMP NOT NULL,
                       access_type TEXT NOT NULL,
                       FOREIGN KEY (guest_id) REFERENCES guests (guest_id),
                       FOREIGN KEY (zone_id) REFERENCES security_zones (zone_id)
@@ -99,8 +99,8 @@ const gameCases = [
                       alert_id INTEGER PRIMARY KEY,
                       zone_id INTEGER,
                       alert_type TEXT NOT NULL,
-                      timestamp DATETIME NOT NULL,
-                      resolved BOOLEAN NOT NULL,
+                      timestamp TIMESTAMP NOT NULL,
+                      resolved INTEGER NOT NULL,
                       FOREIGN KEY (zone_id) REFERENCES security_zones (zone_id)
                   )`,
         insertStatements: [
@@ -118,7 +118,7 @@ const gameCases = [
                       staff_id INTEGER,
                       log_type TEXT NOT NULL,
                       details TEXT NOT NULL,
-                      timestamp DATETIME NOT NULL
+                      timestamp TIMESTAMP NOT NULL
                   )`,
         insertStatements: [
           `INSERT INTO security_logs VALUES (1, 11, 'Patrol', 'Regular perimeter check', '2023-06-15 12:30:00')`,
@@ -137,7 +137,7 @@ const gameCases = [
                       recovery_id INTEGER PRIMARY KEY,
                       original_table TEXT NOT NULL,
                       data_fragment TEXT NOT NULL,
-                      deletion_timestamp DATETIME
+                      deletion_timestamp TIMESTAMP
                   )`,
         insertStatements: [
           `INSERT INTO deleted_logs VALUES (1, 'access_logs', 'Detective J. Smith, Hunting Trophy Room, 14:28:00, Gun Cabinet Opened', '2023-06-15 15:10:00')`,
@@ -315,7 +315,7 @@ const gameCases = [
                       evidence_id INTEGER PRIMARY KEY,
                       item_description TEXT NOT NULL,
                       location_found TEXT NOT NULL,
-                      collection_time DATETIME NOT NULL,
+                      collection_time TIMESTAMP NOT NULL,
                       handler_id INTEGER,
                       notes TEXT
                   )`,
@@ -332,9 +332,9 @@ const gameCases = [
         createStatement: `CREATE TABLE investigator_notes (
                       note_id INTEGER PRIMARY KEY,
                       investigator_id INTEGER,
-                      timestamp DATETIME NOT NULL,
+                      timestamp TIMESTAMP NOT NULL,
                       note_text TEXT NOT NULL,
-                      case_relevant BOOLEAN
+                      case_relevant INTEGER
                   )`,
         insertStatements: [
           `INSERT INTO investigator_notes VALUES (1, 13, '2023-06-15 13:00:00', 'Wedding security job. Easy money with bonus opportunity.', 1)`,
