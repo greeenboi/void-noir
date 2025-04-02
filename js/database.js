@@ -28,7 +28,22 @@ class GameDatabase {
             return result;
         } catch (error) {
             console.error("Query error:", error);
-            return { error: error.message };
+            
+            // Format error message for better readability
+            let errorMessage = error.message;
+            
+            // Enhance common SQL error messages
+            if (errorMessage.includes("syntax error")) {
+                errorMessage = "Syntax error: Check your SQL syntax";
+            } else if (errorMessage.includes("no such table")) {
+                const tableName = errorMessage.match(/no such table: (\w+)/)?.[1];
+                errorMessage = `Table '${tableName || "unknown"}' does not exist`;
+            } else if (errorMessage.includes("no such column")) {
+                const columnName = errorMessage.match(/no such column: (\w+)/)?.[1];
+                errorMessage = `Column '${columnName || "unknown"}' does not exist`;
+            }
+            
+            return { error: errorMessage };
         }
     }
 

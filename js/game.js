@@ -8,9 +8,10 @@ class SQLDetectiveGame {
         this.currentChallengeIndex = 0;
         this.sqlInterface = document.getElementById('sqlInterface');
         this.caseDescription = document.getElementById('caseDescription');
-        this.sqlQuery = document.getElementById('sqlQuery');
+        this.sqlInput = document.getElementById('sqlInput'); // Fixed reference
         this.runQuery = document.getElementById('runQuery');
         this.queryResult = document.getElementById('queryResult');
+        this.returnButton = document.getElementById('returnButton'); // Add button reference
         
         this.gameCanvas = document.getElementById('gameCanvas');
         this.ctx = this.gameCanvas.getContext('2d');
@@ -34,7 +35,12 @@ class SQLDetectiveGame {
         // Bind events
         this.runQuery.addEventListener('click', () => this.executeQuery());
         
-        // Remove old CodeMirror initialization
+        // Add return button event
+        if (this.returnButton) {
+            this.returnButton.addEventListener('click', () => this.returnToOffice());
+        }
+        
+        // Setup Prism for syntax highlighting
         this.setupPrism();
         
         // Initialize the game
@@ -47,14 +53,19 @@ class SQLDetectiveGame {
             return;
         }
         
-        this.sqlInput = document.getElementById('sqlInput');
-        this.sqlEditor = document.getElementById('sqlQuery');
+        this.sqlInput = document.getElementById('sqlInput'); // Make sure we have the reference
+        this.sqlHighlight = document.getElementById('sqlHighlight'); // Use the renamed element
+        
+        if (!this.sqlInput || !this.sqlHighlight) {
+            console.error('SQL editor elements not found!');
+            return;
+        }
 
         const updateHighlight = () => {
-            // Copy content to the code element
-            this.sqlEditor.textContent = this.sqlInput.value;
+            // Copy content to the code element for highlighting
+            this.sqlHighlight.textContent = this.sqlInput.value;
             // Re-highlight
-            Prism.highlightElement(this.sqlEditor);
+            Prism.highlightElement(this.sqlHighlight);
         };
 
         // Initial highlight
@@ -65,8 +76,9 @@ class SQLDetectiveGame {
         this.sqlInput.addEventListener('change', updateHighlight);
         this.sqlInput.addEventListener('keyup', updateHighlight);
 
-        // Handle tab key
+        // Handle tab key and Ctrl+Enter
         this.sqlInput.addEventListener('keydown', (e) => {
+            // Handle tab key
             if (e.key === 'Tab') {
                 e.preventDefault();
                 const start = this.sqlInput.selectionStart;
@@ -74,6 +86,15 @@ class SQLDetectiveGame {
                 this.sqlInput.value = `${this.sqlInput.value.substring(0, start)}    ${this.sqlInput.value.substring(end)}`;
                 this.sqlInput.selectionStart = this.sqlInput.selectionEnd = start + 4;
                 updateHighlight();
+            }
+            
+            // Handle Ctrl+Enter to run query
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                this.executeQuery();
+                // Show visual feedback that the shortcut worked
+                this.runQuery.classList.add('active');
+                setTimeout(() => this.runQuery.classList.remove('active'), 200);
             }
         });
     }
@@ -152,26 +173,35 @@ class SQLDetectiveGame {
     }
     
     async executeQuery() {
-        const query = this.sqlInput.value.trim();
+        // Get query safely using optional chaining to avoid errors
+        const query = this.sqlInput?.value?.trim() || '';
+        
         if (!query) {
-            this.showMessage("Please enter a SQL query");
+            this.showAlert("Please enter a SQL query", "warning");
             return;
         }
         
-        // Execute the query
-        const result = await gameDB.executeQuery(query);
-        
-        // Display results
-        if (result.error) {
-            this.displayQueryError(result.error);
-            return;
+        try {
+            // Show loading state
+            this.queryResult.innerHTML = "<div class='loading'>Executing query...</div>";
+            
+            // Execute the query
+            const result = await gameDB.executeQuery(query);
+            
+            // Display results
+            if (result.error) {
+                this.displayQueryError(result.error);
+                return;
+            }
+            
+            // Display the results
+            this.displayQueryResults(result);
+            
+            // Check if query solves the current challenge
+            this.checkChallengeSolution(query);
+        } catch (error) {
+            this.displayQueryError(error.message || "An unexpected error occurred");
         }
-        
-        // Display the results
-        this.displayQueryResults(result);
-        
-        // Check if query solves the current challenge
-        this.checkChallengeSolution(query);
     }
     
     displayQueryResults(result) {
@@ -203,7 +233,16 @@ class SQLDetectiveGame {
     }
     
     displayQueryError(error) {
-        this.queryResult.innerHTML = `<p class="error">Error: ${error}</p>`;
+        this.queryResult.innerHTML = `<div class="error-container">
+            <div class="error-icon">⚠️</div>
+            <div class="error-message">
+                <h4>SQL Error</h4>
+                <p>${error}</p>
+            </div>
+        </div>`;
+        
+        // Also show an alert for immediate feedback
+        this.showAlert(`SQL Error: ${error}`, "error");
     }
     
     async checkChallengeSolution(query) {
@@ -270,15 +309,67 @@ class SQLDetectiveGame {
         `;
     }
     
-    showMessage(message, duration = 3000) {
-        const messageElement = document.createElement('div');
-        messageElement.className = 'game-message';
-        messageElement.textContent = message;
-        document.body.appendChild(messageElement);
+    showAlert(message, type = "info") {
+        // Create alert element
+        const alertElement = document.createElement('div');
+        alertElement.className = `alert alert-${type}`;
         
-        setTimeout(() => {
-            messageElement.remove();
-        }, duration);
+        // Create content
+        const alertContent = document.createElement('div');
+        alertContent.className = 'alert-content';
+        
+        // Create icon based on type
+        const icon = document.createElement('span');
+        icon.className = 'alert-icon';
+        switch (type) {
+            case 'error': 
+                icon.textContent = '❌'; 
+                break;
+            case 'success': 
+                icon.textContent = '✅'; 
+                break;
+            case 'warning': 
+                icon.textContent = '⚠️'; 
+                break;
+            default: 
+                icon.textContent = 'ℹ️';
+        }
+        
+        // Create message
+        const text = document.createElement('span');
+        text.textContent = message;
+        
+        // Create close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'alert-close';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => alertElement.remove();
+        
+        // Assemble alert
+        alertContent.appendChild(icon);
+        alertContent.appendChild(text);
+        alertElement.appendChild(alertContent);
+        alertElement.appendChild(closeBtn);
+        
+        // Add to page
+        document.body.appendChild(alertElement);
+        
+        // Animate in
+        setTimeout(() => alertElement.classList.add('show'), 10);
+        
+        // Auto-remove after delay unless it's an error
+        if (type !== 'error') {
+            setTimeout(() => {
+                alertElement.classList.remove('show');
+                setTimeout(() => alertElement.remove(), 300);
+            }, 5000);
+        }
+        
+        return alertElement;
+    }
+    
+    showMessage(message, duration = 3000) {
+        return this.showAlert(message, "success");
     }
     
     setupLittleJS() {
@@ -350,22 +441,13 @@ class SQLDetectiveGame {
                 this.ctx.fillStyle = '#1a1a1a';
                 this.ctx.fillRect(0, 0, width, height);
                 
-                // Add a "return to office" button
-                this.ctx.fillStyle = '#4285f4';
-                this.ctx.fillRect(20, 20, 150, 40);
-                this.ctx.fillStyle = 'white';
-                this.ctx.font = '16px Arial';
-                this.ctx.fillText('Return to Office', 35, 45);
+                // Remove the old return button drawing code since we have a proper UI button now
                 
                 this.gameCanvas.onclick = (e) => {
                     const x = e.clientX;
                     const y = e.clientY;
                     
-                    // Return to office button
-                    if (x > 20 && x < 170 && y > 20 && y < 60) {
-                        this.gameState.scene = 'office';
-                        this.sqlInterface.classList.add('hidden');
-                    }
+                    // Add any other canvas click handlers here if needed
                 };
                 break;
                 
@@ -373,6 +455,14 @@ class SQLDetectiveGame {
                 // Not implemented in this basic version
                 break;
         }
+    }
+    
+    returnToOffice() {
+        this.gameState.scene = 'office';
+        this.sqlInterface.classList.add('hidden');
+        
+        // Optional: Show a transition effect
+        this.showAlert("Returning to office...", "info");
     }
 }
 

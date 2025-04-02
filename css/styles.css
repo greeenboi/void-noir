@@ -1,14 +1,32 @@
+/* Base styles */
+:root {
+  --primary-color: #4285f4;
+  --primary-dark: #3367d6;
+  --secondary-color: #50fa7b;
+  --error-color: #dc3545;
+  --warning-color: #ffc107;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --dark-bg: #1a1a1a;
+  --panel-bg: #2d2d2d;
+  --panel-header: #333;
+  --text-color: #f0f0f0;
+  --border-radius: 8px;
+}
+
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #1a1a1a;
-    font-family: 'Arial', sans-serif;
-    color: #f0f0f0;
+    background-color: var(--dark-bg);
+    font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
+/* Game container */
 #gameContainer {
     position: relative;
     width: 100%;
@@ -23,129 +41,234 @@ body, html {
     height: 100%;
 }
 
+/* SQL Interface */
 #sqlInterface {
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
+    padding: 0;
+    background: rgba(15, 15, 15, 0.95);
     color: white;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 1000px;
-    border-radius: 8px;
+    width: 95%;
+    max-width: 1600px; /* Increased from 1200px */
+    height: 90vh; /* Set explicit height */
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sqlInterface .header {
+    background: var(--panel-header);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sqlInterface .header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+#sqlInterface .header .controls {
+    display: flex;
+    gap: 10px;
 }
 
 #sqlInterface.hidden {
     display: none;
 }
 
-.interface-grid {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 20px;
-    height: 80vh;
+.interface-content {
+    padding: 20px;
+    flex: 1;
+    height: calc(90vh - 52px); /* Adjust for header height */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
+.interface-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 25%) 1fr; /* Percentage-based with minimum width */
+    gap: 20px;
+    flex: 1;
+    height: 100%;
+}
+
+/* Left panel */
 .left-panel {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-height: 100%;
-    overflow-y: auto;
+    height: 100%;
+    overflow: hidden;
 }
 
-.right-panel {
+.panel-section {
+    background: var(--panel-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-height: 100%;
 }
 
-#databaseInfo {
-    background: #333;
+.panel-header {
+    background: var(--panel-header);
+    padding: 12px 15px;
+    font-weight: 500;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-content {
     padding: 15px;
-    border-radius: 5px;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
-#schemaList {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-    font-size: 12px;
-    color: #ddd;
+.panel-content::-webkit-scrollbar {
+    width: 6px;
 }
 
+.panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Case description */
+#caseDescription .briefing {
+    padding: 12px;
+    background: rgba(66, 133, 244, 0.1);
+    border-left: 3px solid var(--primary-color);
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+#caseDescription .task {
+    padding: 12px;
+    background: rgba(80, 250, 123, 0.1);
+    border-left: 3px solid var(--secondary-color);
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+#caseDescription .hint {
+    padding: 12px;
+    background: rgba(255, 121, 198, 0.1);
+    border-left: 3px solid #ff79c6;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+#caseDescription h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+/* Schema display */
 .schema-item {
     margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .schema-item h5 {
-    color: #4285f4;
-    margin: 0 0 5px 0;
+    background: rgba(66, 133, 244, 0.2);
+    color: var(--primary-color);
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .schema-item pre {
     margin: 0;
-    padding: 8px;
-    background: #2d2d2d;
-    border-radius: 4px;
+    padding: 10px;
+    font-size: 12px;
+    color: #ddd;
     overflow-x: auto;
 }
 
-#caseDescription {
-    background: #333;
-    padding: 15px;
-    border-radius: 5px;
+/* Right panel */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    overflow: hidden;
 }
 
-#caseDescription .briefing {
-    padding: 10px;
-    background: #2d2d2d;
-    border-left: 3px solid #4285f4;
-    margin: 10px 0;
-}
-
-#caseDescription .task {
-    padding: 10px;
-    background: #2d2d2d;
-    border-left: 3px solid #50fa7b;
-    margin: 10px 0;
-}
-
-#caseDescription .hint {
-    padding: 10px;
-    background: #2d2d2d;
-    border-left: 3px solid #ff79c6;
-    margin: 10px 0;
-}
-
+/* SQL Editor */
 #sqlEditor {
-    margin-bottom: 20px;
+    flex: 2; /* Give it more space compared to results */
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Fix flexbox overflow issues */
 }
 
 #sqlEditor .editor-container {
     position: relative;
-    margin-bottom: 10px;
-    background: #2d2d2d;
-    border-radius: 4px;
-    min-height: 100px;
+    flex: 1;
+    background: var(--panel-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sqlEditor .editor-header {
+    background: var(--panel-header);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sqlEditor .editor-title {
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#sqlEditor .editor-title svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
 }
 
 #sqlInput {
     position: absolute;
-    top: 0;
+    top: 45px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 45px);
     margin: 0;
-    padding: 1em;
+    padding: 15px;
     border: none;
     background: transparent;
-    color: rgba(255,255,255,0.8);
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    color: rgba(255,255,255,0.9);
+    font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
     resize: none;
     z-index: 1;
+    box-sizing: border-box;
 }
 
 #sqlInput:focus {
@@ -154,38 +277,259 @@ body, html {
 
 #sqlEditor pre {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 45px 0 0 0 !important;
     background: transparent !important;
     pointer-events: none;
+    height: 100%;
 }
 
 #sqlEditor code {
     display: block;
     margin: 0;
-    padding: 1em;
+    padding: 15px;
     background: transparent !important;
-}
-
-#sqlQuery {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
+}
+
+/* SQL Editor controls */
+.editor-controls {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+}
+
+/* Button styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--panel-bg);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-dark);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-primary.active {
+    transform: scale(0.98);
+    background: var(--primary-dark);
+}
+
+.btn-success {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.keyboard-shortcut {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11px;
+    margin-left: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    vertical-align: middle;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-flex;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tooltip:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Query Result */
+#queryResult {
+    background: var(--panel-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    flex: 1; /* Take remaining space */
+    min-height: 200px; /* Ensure minimum height */
+    display: flex;
+    flex-direction: column;
+}
+
+.result-header {
+    background: var(--panel-header);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-title {
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.result-content {
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0; /* Fix flexbox overflow issue */
+    max-height: 100%;
+}
+
+#queryResult table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#queryResult th, #queryResult td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+}
+
+#queryResult th {
+    background: rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    font-weight: 500;
+}
+
+#queryResult tr:hover td {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Message displays */
+.message {
+    padding: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.success-message {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid var(--success-color);
+}
+
+.info-message {
+    background: rgba(23, 162, 184, 0.1);
+    border-left: 4px solid var(--info-color);
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    color: var(--primary-color);
+    gap: 10px;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(66, 133, 244, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-container {
+    padding: 15px;
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid var(--error-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.error-icon {
+    font-size: 18px;
+}
+
+.error-message h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: var(--error-color);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.error-message p {
+    margin: 0;
     white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    overflow-x: auto;
 }
 
-/* Make highlighted code visible through textarea */
-.token {
-    color: inherit;
-    text-shadow: 0 0 0.01px currentColor;
-    font-weight: bold;
-}
-
+/* Token highlighting */
 .token.keyword {
     color: #ff79c6;
+    font-weight: 600;
 }
 
 .token.function {
-    color: #50fa7b;
+    color: var(--secondary-color);
 }
 
 .token.string {
@@ -200,40 +544,161 @@ body, html {
     color: #ff79c6;
 }
 
-#runQuery {
-    background: #4285f4;
+.token.comment {
+    color: #6272a4;
+    font-style: italic;
+}
+
+/* Alert system */
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 6px;
+    background: var(--panel-bg);
     color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    min-width: 300px;
+    max-width: 500px;
+    transform: translateX(110%);
+    transition: transform 0.3s ease;
+}
+
+.alert.show {
+    transform: translateX(0);
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-icon {
+    font-size: 20px;
+}
+
+.alert-close {
+    background: transparent;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    color: #fff;
+    font-size: 20px;
     cursor: pointer;
-    font-size: 14px;
+    padding: 0;
+    margin-left: 15px;
 }
 
-#runQuery:hover {
-    background: #3367d6;
+.alert-error, .alert-danger {
+    background: rgba(220, 53, 69, 0.95);
+    border-left: 5px solid var(--error-color);
 }
 
-#queryResult {
-    margin-top: 20px;
-    max-height: 300px;
-    overflow-y: auto;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 4px;
+.alert-success {
+    background: rgba(40, 167, 69, 0.95);
+    border-left: 5px solid var(--success-color);
 }
 
-#queryResult table {
-    width: 100%;
-    border-collapse: collapse;
+.alert-warning {
+    background: rgba(255, 193, 7, 0.95);
+    border-left: 5px solid var(--warning-color);
 }
 
-#queryResult th, #queryResult td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.alert-info {
+    background: rgba(23, 162, 184, 0.95);
+    border-left: 5px solid var(--info-color);
 }
 
-#queryResult th {
-    background: rgba(255, 255, 255, 0.1);
+.keyboard-shortcut-hint {
+    display: inline-block;
+    margin-left: 10px;
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Power button (Return to Office) */
+.power-button-container {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 10;
+}
+
+.power-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(220, 53, 69, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.power-button:hover {
+    background: rgba(220, 53, 69, 1);
+    transform: scale(1.05);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.power-button:active {
+    transform: scale(0.95);
+}
+
+.power-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .interface-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .left-panel {
+        height: auto;
+        max-height: 300px;
+    }
+    
+    #sqlInterface {
+        width: 95%;
+        height: 95vh;
+    }
+}
+
+@media (min-width: 1800px) {
+    #sqlInterface {
+        max-width: 1800px;
+    }
+    
+    #sqlInput, #sqlEditor code {
+        font-size: 16px;
+    }
+    
+    .panel-content {
+        font-size: 15px;
+    }
+}
+
+/* Add more vertical space for the editor on tall screens */
+@media (min-height: 900px) {
+    #sqlEditor {
+        flex: 3;
+    }
+    
+    #queryResult {
+        flex: 1;
+    }
 }
