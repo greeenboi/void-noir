@@ -120,11 +120,9 @@
         </div>
     </div>
 
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@littlejs/core@0.1.0/dist/little.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js" type="module"></script>
     
-    <!-- Prism.js - load synchronously -->
     <script src="js/prism.js"></script>
     <script>
         if (typeof Prism === 'undefined') {
@@ -132,18 +130,15 @@
         }
     </script>
     
-    <!-- Game scripts -->
     <script src="js/database.js" type="module"></script>
     <script src="js/cases.js" type="module"></script>
     <script src="js/game.js" type="module"></script>
     
-    <!-- Keyboard shortcut handler -->
     <script>
         document.getElementById('sqlInput').addEventListener('keydown', function(e) {
-            // Check for Ctrl+Enter (or Cmd+Enter on Mac)
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault(); // Prevent default behavior
-                document.getElementById('runQuery').click(); // Simulate button click
+                e.preventDefault();
+                document.getElementById('runQuery').click();
             }
         });
     </script>

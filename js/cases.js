@@ -155,9 +155,8 @@ const gameCases = [
                     FROM guests
                 `,
 				validateFn: (result, expectedResult) => {
-					// Improved validation checking for exact columns and all rows
 					return (
-						result.rows.length === 11 && // Total number of guests
+						result.rows.length === 11 &&
 						"name" in result.rows[0] &&
 						"relationship" in result.rows[0] &&
 						"invitation_status" in result.rows[0]
@@ -174,12 +173,10 @@ const gameCases = [
                     WHERE restricted = 1
                 `,
 				validateFn: (result, expectedResult) => {
-					// More precise validation checking for restricted zones
 					if (result.rows.length !== 5) {
-						return false; // Must find exactly 5 restricted zones
+						return false;
 					}
 
-					// Check if the correct zones are returned (all with security level >= 3)
 					const expectedZoneNames = [
 						"Kitchen",
 						"Security Office",
@@ -189,7 +186,6 @@ const gameCases = [
 					];
 					const foundZoneNames = result.rows.map((row) => row.zone_name);
 
-					// Check if all expected zones are found
 					return (
 						expectedZoneNames.every((zone) => foundZoneNames.includes(zone)) &&
 						result.rows.every((row) => row.security_level >= 3)
@@ -208,15 +204,14 @@ const gameCases = [
                     ORDER BY timestamp
                 `,
 				validateFn: (result, expectedResult) => {
-					// Check if alerts are ordered by timestamp
 					const firstTimestamp = new Date(result.rows[0].timestamp);
 					const lastTimestamp = new Date(
 						result.rows[result.rows.length - 1].timestamp,
 					);
 					return (
-						result.rows.length >= 3 && // Should find at least 3 alerts
+						result.rows.length >= 3 &&
 						firstTimestamp <= lastTimestamp
-					); // Properly ordered
+					);
 				},
 				difficulty: "medium",
 			},
@@ -233,10 +228,8 @@ const gameCases = [
                     AND al.timestamp BETWEEN '2023-06-15 14:25:00' AND '2023-06-15 14:30:00'
                 `,
 				validateFn: (result, expectedResult) => {
-					// Should find at least one person in the trophy room
 					return (
 						result.rows.length > 0 &&
-						// Should include Theodore and possibly the detective
 						result.rows.some(
 							(r) =>
 								r.name.includes("Theodore") || r.name.includes("Detective"),
@@ -383,9 +376,8 @@ const gameCases = [
                     WHERE item_type = 'Weapon'
                 `,
 				validateFn: (result, expectedResult) => {
-					// Check if all weapons are found
 					return (
-						result.rows.length === 3 && // Three weapons were brought
+						result.rows.length === 3 &&
 						result.rows.every((r) => r.item_type === "Weapon")
 					);
 				},
@@ -400,9 +392,8 @@ const gameCases = [
                     WHERE amount > 20000
                 `,
 				validateFn: (result, expectedResult) => {
-					// Check if we found the large transactions
 					return (
-						result.rows.length >= 3 && // At least 3 large transactions
+						result.rows.length >= 3 &&
 						result.rows.every((r) => Number.parseFloat(r.amount) > 20000)
 					);
 				},
@@ -419,10 +410,8 @@ const gameCases = [
                     ORDER BY collection_time
                 `,
 				validateFn: (result, expectedResult) => {
-					// Check if evidence is properly ordered
 					const times = result.rows.map((r) => new Date(r.collection_time));
 
-					// Check if in ascending order
 					const isOrdered = times.every(
 						(time, i) => i === 0 || time >= times[i - 1],
 					);
@@ -447,7 +436,6 @@ const gameCases = [
                     AND sz.zone_name = 'Hunting Trophy Room'
                 `,
 				validateFn: (result, expectedResult) => {
-					// Check if we found connections between Theodore's items, finances, and movements
 					return (
 						result.rows.length > 0 &&
 						result.rows.some((r) => r.item && r.amount && r.zone_name)
@@ -462,5 +450,4 @@ const gameCases = [
 	},
 ];
 
-// Export for use in other modules
 export default gameCases;
