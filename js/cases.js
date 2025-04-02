@@ -208,10 +208,7 @@ const gameCases = [
 					const lastTimestamp = new Date(
 						result.rows[result.rows.length - 1].timestamp,
 					);
-					return (
-						result.rows.length >= 3 &&
-						firstTimestamp <= lastTimestamp
-					);
+					return result.rows.length >= 3 && firstTimestamp <= lastTimestamp;
 				},
 				difficulty: "medium",
 			},
@@ -220,13 +217,13 @@ const gameCases = [
 			// 		"Find out who was in the Hunting Trophy Room when the shot was fired, combining data from multiple tables",
 			// 	hint: "Use JOINs to connect guests, access_logs, and security_zones tables",
 			// 	solution: `
-            //         SELECT g.name, g.relationship, al.timestamp, al.access_type, sz.zone_name
-            //         FROM guests g
-            //         JOIN access_logs al ON g.guest_id = al.guest_id
-            //         JOIN security_zones sz ON al.zone_id = sz.zone_id
-            //         WHERE sz.zone_name = 'Hunting Trophy Room'
-            //         AND al.timestamp BETWEEN '2023-06-15 14:25:00' AND '2023-06-15 14:30:00'
-            //     `,
+			//         SELECT g.name, g.relationship, al.timestamp, al.access_type, sz.zone_name
+			//         FROM guests g
+			//         JOIN access_logs al ON g.guest_id = al.guest_id
+			//         JOIN security_zones sz ON al.zone_id = sz.zone_id
+			//         WHERE sz.zone_name = 'Hunting Trophy Room'
+			//         AND al.timestamp BETWEEN '2023-06-15 14:25:00' AND '2023-06-15 14:30:00'
+			//     `,
 			// 	validateFn: (result, expectedResult) => {
 			// 		return (
 			// 			result.rows.length > 0 &&
@@ -257,12 +254,12 @@ const gameCases = [
 	// 		{
 	// 			name: "family_relationships",
 	// 			createStatement: `CREATE TABLE family_relationships (
-    //                   relationship_id INTEGER PRIMARY KEY,
-    //                   person1_id INTEGER,
-    //                   person2_id INTEGER,
-    //                   relationship_type TEXT NOT NULL,
-    //                   notes TEXT
-    //               )`,
+	//                   relationship_id INTEGER PRIMARY KEY,
+	//                   person1_id INTEGER,
+	//                   person2_id INTEGER,
+	//                   relationship_type TEXT NOT NULL,
+	//                   notes TEXT
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO family_relationships VALUES (1, 3, NULL, 'Previous Marriage', 'Theodore was married to the late heiress Victoria Maxwell')`,
 	// 				`INSERT INTO family_relationships VALUES (2, 3, 5, 'Business Rivalry', 'Theodore and Richard have competing businesses')`,
@@ -274,13 +271,13 @@ const gameCases = [
 	// 		{
 	// 			name: "financial_transactions",
 	// 			createStatement: `CREATE TABLE financial_transactions (
-    //                   transaction_id INTEGER PRIMARY KEY,
-    //                   person_id INTEGER,
-    //                   transaction_type TEXT NOT NULL,
-    //                   amount DECIMAL(10,2) NOT NULL,
-    //                   transaction_date DATE NOT NULL,
-    //                   description TEXT
-    //               )`,
+	//                   transaction_id INTEGER PRIMARY KEY,
+	//                   person_id INTEGER,
+	//                   transaction_type TEXT NOT NULL,
+	//                   amount DECIMAL(10,2) NOT NULL,
+	//                   transaction_date DATE NOT NULL,
+	//                   description TEXT
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO financial_transactions VALUES (1, 3, 'Withdrawal', 50000.00, '2023-06-10', 'Large cash withdrawal')`,
 	// 				`INSERT INTO financial_transactions VALUES (2, 3, 'Purchase', 4500.00, '2023-06-12', 'Antique shop purchase')`,
@@ -294,12 +291,12 @@ const gameCases = [
 	// 		{
 	// 			name: "gift_registry",
 	// 			createStatement: `CREATE TABLE gift_registry (
-    //                   gift_id INTEGER PRIMARY KEY,
-    //                   guest_id INTEGER,
-    //                   gift_description TEXT NOT NULL,
-    //                   estimated_value DECIMAL(10,2),
-    //                   status TEXT NOT NULL
-    //               )`,
+	//                   gift_id INTEGER PRIMARY KEY,
+	//                   guest_id INTEGER,
+	//                   gift_description TEXT NOT NULL,
+	//                   estimated_value DECIMAL(10,2),
+	//                   status TEXT NOT NULL
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO gift_registry VALUES (1, 1, 'Silver Cutlery Set', 1200.00, 'Received')`,
 	// 				`INSERT INTO gift_registry VALUES (2, 2, 'Crystal Vase', 800.00, 'Received')`,
@@ -312,12 +309,12 @@ const gameCases = [
 	// 		{
 	// 			name: "personal_items",
 	// 			createStatement: `CREATE TABLE personal_items (
-    //                   item_id INTEGER PRIMARY KEY,
-    //                   owner_id INTEGER,
-    //                   item_type TEXT NOT NULL,
-    //                   description TEXT NOT NULL,
-    //                   brought_to_wedding INTEGER
-    //               )`,
+	//                   item_id INTEGER PRIMARY KEY,
+	//                   owner_id INTEGER,
+	//                   item_type TEXT NOT NULL,
+	//                   description TEXT NOT NULL,
+	//                   brought_to_wedding INTEGER
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO personal_items VALUES (1, 3, 'Weapon', 'Antique Family Pistol', 1)`,
 	// 				`INSERT INTO personal_items VALUES (2, 3, 'Jewelry', 'Gold Pocket Watch', 1)`,
@@ -332,13 +329,13 @@ const gameCases = [
 	// 		{
 	// 			name: "evidence_log",
 	// 			createStatement: `CREATE TABLE evidence_log (
-    //                   evidence_id INTEGER PRIMARY KEY,
-    //                   item_description TEXT NOT NULL,
-    //                   location_found TEXT NOT NULL,
-    //                   collection_time TIMESTAMP NOT NULL,
-    //                   handler_id INTEGER,
-    //                   notes TEXT
-    //               )`,
+	//                   evidence_id INTEGER PRIMARY KEY,
+	//                   item_description TEXT NOT NULL,
+	//                   location_found TEXT NOT NULL,
+	//                   collection_time TIMESTAMP NOT NULL,
+	//                   handler_id INTEGER,
+	//                   notes TEXT
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO evidence_log VALUES (1, 'Shell Casing', 'Hunting Trophy Room', '2023-06-15 15:00:00', 13, 'Standard 9mm, wiped of prints')`,
 	// 				`INSERT INTO evidence_log VALUES (2, 'Gunpowder Residue', 'Trophy Room Gun Cabinet', '2023-06-15 15:15:00', 13, 'Consistent with recent discharge')`,
@@ -350,12 +347,12 @@ const gameCases = [
 	// 		{
 	// 			name: "investigator_notes",
 	// 			createStatement: `CREATE TABLE investigator_notes (
-    //                   note_id INTEGER PRIMARY KEY,
-    //                   investigator_id INTEGER,
-    //                   timestamp TIMESTAMP NOT NULL,
-    //                   note_text TEXT NOT NULL,
-    //                   case_relevant INTEGER
-    //               )`,
+	//                   note_id INTEGER PRIMARY KEY,
+	//                   investigator_id INTEGER,
+	//                   timestamp TIMESTAMP NOT NULL,
+	//                   note_text TEXT NOT NULL,
+	//                   case_relevant INTEGER
+	//               )`,
 	// 			insertStatements: [
 	// 				`INSERT INTO investigator_notes VALUES (1, 13, '2023-06-15 13:00:00', 'Wedding security job. Easy money with bonus opportunity.', 1)`,
 	// 				`INSERT INTO investigator_notes VALUES (2, 13, '2023-06-15 14:00:00', 'Groom seems nervous. Probably remembers our previous encounter.', 1)`,
@@ -371,10 +368,10 @@ const gameCases = [
 	// 			question: "List all weapons brought to the wedding",
 	// 			hint: "Use a simple SELECT statement",
 	// 			solution: `
-    //                 SELECT description, item_type
-    //                 FROM personal_items
-    //                 WHERE item_type = 'Weapon'
-    //             `,
+	//                 SELECT description, item_type
+	//                 FROM personal_items
+	//                 WHERE item_type = 'Weapon'
+	//             `,
 	// 			validateFn: (result, expectedResult) => {
 	// 				return (
 	// 					result.rows.length === 3 &&
@@ -387,10 +384,10 @@ const gameCases = [
 	// 			question: "Find all financial transactions over $20,000",
 	// 			hint: "Use a SELECT with a WHERE clause",
 	// 			solution: `
-    //                 SELECT transaction_type, amount, description, transaction_date
-    //                 FROM financial_transactions
-    //                 WHERE amount > 20000
-    //             `,
+	//                 SELECT transaction_type, amount, description, transaction_date
+	//                 FROM financial_transactions
+	//                 WHERE amount > 20000
+	//             `,
 	// 			validateFn: (result, expectedResult) => {
 	// 				return (
 	// 					result.rows.length >= 3 &&
@@ -404,11 +401,11 @@ const gameCases = [
 	// 				"List all evidence collected from the Trophy Room, sorted by collection time",
 	// 			hint: "Use SELECT with WHERE and ORDER BY clauses",
 	// 			solution: `
-    //                 SELECT item_description, collection_time, handler_id, notes
-    //                 FROM evidence_log
-    //                 WHERE location_found LIKE '%Trophy Room%'
-    //                 ORDER BY collection_time
-    //             `,
+	//                 SELECT item_description, collection_time, handler_id, notes
+	//                 FROM evidence_log
+	//                 WHERE location_found LIKE '%Trophy Room%'
+	//                 ORDER BY collection_time
+	//             `,
 	// 			validateFn: (result, expectedResult) => {
 	// 				const times = result.rows.map((r) => new Date(r.collection_time));
 
@@ -425,16 +422,16 @@ const gameCases = [
 	// 				"Connect Theodore Maxwell's personal items with his financial transactions and movements in the mansion",
 	// 			hint: "Use JOINs to connect multiple tables",
 	// 			solution: `
-    //                 SELECT g.name, pi.description as item, ft.amount, ft.transaction_type, 
-    //                        sz.zone_name, al.timestamp
-    //                 FROM guests g
-    //                 JOIN personal_items pi ON g.guest_id = pi.owner_id
-    //                 JOIN financial_transactions ft ON g.guest_id = ft.person_id
-    //                 JOIN access_logs al ON g.guest_id = al.guest_id
-    //                 JOIN security_zones sz ON al.zone_id = sz.zone_id
-    //                 WHERE g.name = 'Theodore Maxwell'
-    //                 AND sz.zone_name = 'Hunting Trophy Room'
-    //             `,
+	//                 SELECT g.name, pi.description as item, ft.amount, ft.transaction_type,
+	//                        sz.zone_name, al.timestamp
+	//                 FROM guests g
+	//                 JOIN personal_items pi ON g.guest_id = pi.owner_id
+	//                 JOIN financial_transactions ft ON g.guest_id = ft.person_id
+	//                 JOIN access_logs al ON g.guest_id = al.guest_id
+	//                 JOIN security_zones sz ON al.zone_id = sz.zone_id
+	//                 WHERE g.name = 'Theodore Maxwell'
+	//                 AND sz.zone_name = 'Hunting Trophy Room'
+	//             `,
 	// 			validateFn: (result, expectedResult) => {
 	// 				return (
 	// 					result.rows.length > 0 &&
