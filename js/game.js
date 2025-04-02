@@ -48,10 +48,17 @@ class SQLDetectiveGame {
         computerOn: new Audio("audio/computer_on.mp3"),
         computerOff: new Audio("audio/computer_off.mp3"),
         walking: new Audio("audio/walking.mp3"),
+        portal: new Audio("audio/portal.mp3"),
+        teleport: new Audio("audio/teleport.mp3"),
+        cutscene: new Audio("audio/cutscene.mp3"),
+        intro: new Audio("audio/intro.mp3"),
       },
     };
 
     this.isWalking = false;
+    this.portalSoundPlaying = false;
+    this.cutsceneSoundPlaying = false;
+    this.introSoundPlaying = false;
 
     this.loadAssets();
 
@@ -170,6 +177,9 @@ class SQLDetectiveGame {
 
     this.setupLittleJS();
 
+    this.playSound("intro", true);
+    this.introSoundPlaying = true;
+
     this.gameLoop();
   }
 
@@ -185,6 +195,7 @@ class SQLDetectiveGame {
     this.currentChallengeIndex = 0;
 
     this.gameState.portalActive = false;
+    this.stopPortalSound();
 
     this.updateCaseInfo();
   }
@@ -334,9 +345,9 @@ class SQLDetectiveGame {
       } else {
         this.updateCaseInfo();
         this.showPortalMessage();
+        this.gameState.portalActive = true;
+        this.startPortalSound();
       }
-
-      this.gameState.portalActive = true;
 
       return true;
     }
@@ -364,8 +375,46 @@ class SQLDetectiveGame {
       this.gameState.nextCaseId = nextCaseId;
       this.gameState.portalActive = true;
       this.showPortalMessage();
+      this.startPortalSound();
     } else {
       this.showGameComplete();
+    }
+  }
+
+  startPortalSound() {
+    if (!this.portalSoundPlaying) {
+      this.playSound("portal", true);
+      this.portalSoundPlaying = true;
+    }
+  }
+
+  stopPortalSound() {
+    if (this.portalSoundPlaying) {
+      this.stopSound("portal");
+      this.portalSoundPlaying = false;
+    }
+  }
+
+  startCutsceneSound() {
+    if (!this.cutsceneSoundPlaying) {
+      const cutsceneSound = this.assets.sounds["cutscene"];
+      cutsceneSound.volume = 0.2;
+      this.playSound("cutscene", true);
+      this.cutsceneSoundPlaying = true;
+    }
+  }
+
+  stopCutsceneSound() {
+    if (this.cutsceneSoundPlaying) {
+      this.stopSound("cutscene");
+      this.cutsceneSoundPlaying = false;
+    }
+  }
+
+  stopIntroSound() {
+    if (this.introSoundPlaying) {
+      this.stopSound("intro");
+      this.introSoundPlaying = false;
     }
   }
 
@@ -462,9 +511,13 @@ class SQLDetectiveGame {
     this.gameState.transitionProgress = 0;
     this.gameState.transitionDirection = direction;
 
-    // Stop walking sound when transitioning
+    if (direction === "out" && this.gameState.portalActive) {
+      this.playSound("teleport");
+    }
+
     this.stopSound("walking");
     this.isWalking = false;
+    this.stopPortalSound();
   }
 
   updateTransition() {
@@ -505,9 +558,33 @@ class SQLDetectiveGame {
 
     this.drawScene();
 
-    // Update walking sound if in hallway scene
+    if (this.gameState.scene === "welcome") {
+      if (!this.introSoundPlaying) {
+        this.playSound("intro", true);
+        this.introSoundPlaying = true;
+      }
+    } else if (this.introSoundPlaying) {
+      this.stopIntroSound();
+    }
+
+    if (this.gameState.scene === "cutscene") {
+      if (!this.cutsceneSoundPlaying) {
+        this.startCutsceneSound();
+      }
+    } else if (this.cutsceneSoundPlaying) {
+      this.stopCutsceneSound();
+    }
+
     if (this.gameState.scene === "hallway") {
       this.updateWalkingSound();
+
+      if (this.gameState.portalActive && !this.portalSoundPlaying) {
+        this.startPortalSound();
+      } else if (!this.gameState.portalActive && this.portalSoundPlaying) {
+        this.stopPortalSound();
+      }
+    } else if (this.portalSoundPlaying) {
+      this.stopPortalSound();
     }
 
     requestAnimationFrame(() => this.gameLoop());
@@ -537,7 +614,6 @@ class SQLDetectiveGame {
   }
 
   handleKeyDown(e) {
-    // Advance cutscene when any key is pressed
     if (this.gameState.scene === "cutscene") {
       this.advanceCutscene();
       return;
@@ -570,6 +646,10 @@ class SQLDetectiveGame {
     this.gameState.scene = "cutscene";
     this.gameState.cutsceneIndex = 0;
     this.gameState.cutsceneData = this.getCutsceneData();
+
+    this.startCutsceneSound();
+
+    this.stopIntroSound();
   }
 
   getCutsceneData() {
@@ -633,6 +713,8 @@ class SQLDetectiveGame {
     } else {
       this.gameState.scene = "hallway";
       this.gameState.detectivePos = { x: 100, y: 0 };
+
+      this.stopCutsceneSound();
     }
   }
 
@@ -1126,7 +1208,7 @@ class SQLDetectiveGame {
     const isMoving = this.gameState.keyState.left || this.gameState.keyState.right;
 
     if (isMoving && !this.isWalking && this.gameState.scene === "hallway") {
-      this.playSound("walking", true); // Loop the walking sound
+      this.playSound("walking", true);
       this.isWalking = true;
     } else if ((!isMoving || this.gameState.scene !== "hallway") && this.isWalking) {
       this.stopSound("walking");
@@ -1139,9 +1221,12 @@ class SQLDetectiveGame {
     this.sqlInterface.classList.add("hidden");
     this.playSound("computerOff");
 
-    // Make sure walking sound is stopped when returning
     this.stopSound("walking");
     this.isWalking = false;
+
+    if (this.gameState.portalActive && !this.portalSoundPlaying) {
+      this.startPortalSound();
+    }
 
     if (this.gameState.portalActive) {
       this.showAlert("Return to the portal to proceed to the next challenge", "info");
