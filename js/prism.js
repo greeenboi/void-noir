@@ -18,7 +18,7 @@ var _self =
  * @namespace
  * @public
  */
-var Prism = (function (_self) {
+var Prism = ((_self) => {
 	// Private helper vars
 	var lang = /(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i;
 	var uniqueId = 0;
@@ -112,9 +112,7 @@ var Prism = (function (_self) {
 			 * type(String)    === 'Function'
 			 * type(/abc+/)    === 'RegExp'
 			 */
-			type: function (o) {
-				return Object.prototype.toString.call(o).slice(8, -1);
-			},
+			type: (o) => Object.prototype.toString.call(o).slice(8, -1),
 
 			/**
 			 * Returns a unique number for the given object. Later calls will still return the same number.
@@ -122,7 +120,7 @@ var Prism = (function (_self) {
 			 * @param {Object} obj
 			 * @returns {number}
 			 */
-			objId: function (obj) {
+			objId: (obj) => {
 				if (!obj["__id"]) {
 					Object.defineProperty(obj, "__id", { value: ++uniqueId });
 				}
@@ -169,11 +167,9 @@ var Prism = (function (_self) {
 						clone = [];
 						visited[id] = clone;
 
-						/** @type {Array} */ (/** @type {any} */ (o)).forEach(
-							function (v, i) {
-								clone[i] = deepClone(v, visited);
-							},
-						);
+						/** @type {Array} */ (/** @type {any} */ (o)).forEach((v, i) => {
+							clone[i] = deepClone(v, visited);
+						});
 
 						return /** @type {any} */ (clone);
 
@@ -190,7 +186,7 @@ var Prism = (function (_self) {
 			 * @param {Element} element
 			 * @returns {string}
 			 */
-			getLanguage: function (element) {
+			getLanguage: (element) => {
 				while (element) {
 					var m = lang.exec(element.className);
 					if (m) {
@@ -208,7 +204,7 @@ var Prism = (function (_self) {
 			 * @param {string} language
 			 * @returns {void}
 			 */
-			setLanguage: function (element, language) {
+			setLanguage: (element, language) => {
 				// remove all `language-xxxx` classes
 				// (this might leave behind a leading space)
 				element.className = element.className.replace(RegExp(lang, "gi"), "");
@@ -225,7 +221,7 @@ var Prism = (function (_self) {
 			 *
 			 * @returns {HTMLScriptElement | null}
 			 */
-			currentScript: function () {
+			currentScript: () => {
 				if (typeof document === "undefined") {
 					return null;
 				}
@@ -284,7 +280,7 @@ var Prism = (function (_self) {
 			 * @param {boolean} [defaultActivation=false]
 			 * @returns {boolean}
 			 */
-			isActive: function (element, className, defaultActivation) {
+			isActive: (element, className, defaultActivation) => {
 				var no = "no-" + className;
 
 				while (element) {
@@ -345,7 +341,7 @@ var Prism = (function (_self) {
 			 *     'color': /\b(?:red|green|blue)\b/
 			 * });
 			 */
-			extend: function (id, redef) {
+			extend: (id, redef) => {
 				var lang = _.util.clone(_.languages[id]);
 
 				for (var key in redef) {
@@ -430,7 +426,7 @@ var Prism = (function (_self) {
 			 * @returns {Grammar} The new grammar object.
 			 * @public
 			 */
-			insertBefore: function (inside, before, insert, root) {
+			insertBefore: (inside, before, insert, root) => {
 				root = root || /** @type {any} */ (_.languages);
 				var grammar = root[inside];
 				/** @type {Grammar} */
@@ -505,7 +501,7 @@ var Prism = (function (_self) {
 		 * @memberof Prism
 		 * @public
 		 */
-		highlightAll: function (async, callback) {
+		highlightAll: (async, callback) => {
 			_.highlightAllUnder(document, async, callback);
 		},
 
@@ -524,7 +520,7 @@ var Prism = (function (_self) {
 		 * @memberof Prism
 		 * @public
 		 */
-		highlightAllUnder: function (container, async, callback) {
+		highlightAllUnder: (container, async, callback) => {
 			var env = {
 				callback: callback,
 				container: container,
@@ -573,7 +569,7 @@ var Prism = (function (_self) {
 		 * @memberof Prism
 		 * @public
 		 */
-		highlightElement: function (element, async, callback) {
+		highlightElement: (element, async, callback) => {
 			// Find language
 			var language = _.util.getLanguage(element);
 			var grammar = _.languages[language];
@@ -636,7 +632,7 @@ var Prism = (function (_self) {
 			if (async && _self.Worker) {
 				var worker = new Worker(_.filename);
 
-				worker.onmessage = function (evt) {
+				worker.onmessage = (evt) => {
 					insertHighlightedCode(evt.data);
 				};
 
@@ -672,7 +668,7 @@ var Prism = (function (_self) {
 		 * @example
 		 * Prism.highlight('var foo = true;', Prism.languages.javascript, 'javascript');
 		 */
-		highlight: function (text, grammar, language) {
+		highlight: (text, grammar, language) => {
 			var env = {
 				code: text,
 				grammar: grammar,
@@ -711,7 +707,7 @@ var Prism = (function (_self) {
 		 *     }
 		 * });
 		 */
-		tokenize: function (text, grammar) {
+		tokenize: (text, grammar) => {
 			var rest = grammar.rest;
 			if (rest) {
 				for (var token in rest) {
@@ -749,7 +745,7 @@ var Prism = (function (_self) {
 			 * @param {HookCallback} callback The callback function which is given environment variables.
 			 * @public
 			 */
-			add: function (name, callback) {
+			add: (name, callback) => {
 				var hooks = _.hooks.all;
 
 				hooks[name] = hooks[name] || [];
@@ -766,7 +762,7 @@ var Prism = (function (_self) {
 			 * @param {Object<string, any>} env The environment variables of the hook passed to all callbacks registered.
 			 * @public
 			 */
-			run: function (name, env) {
+			run: (name, env) => {
 				var callbacks = _.hooks.all[name];
 
 				if (!callbacks || !callbacks.length) {
@@ -865,7 +861,7 @@ var Prism = (function (_self) {
 		}
 		if (Array.isArray(o)) {
 			var s = "";
-			o.forEach(function (e) {
+			o.forEach((e) => {
 				s += stringify(e, language);
 			});
 			return s;
@@ -1204,7 +1200,7 @@ var Prism = (function (_self) {
 			// In worker
 			_self.addEventListener(
 				"message",
-				function (evt) {
+				(evt) => {
 					var message = JSON.parse(evt.data);
 					var lang = message.language;
 					var code = message.code;
@@ -1323,91 +1319,93 @@ if (typeof global !== "undefined") {
  * @global
  * @public
  */
-(function (Prism) {
-	var string =
-		/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;
+(
+	(Prism) => {
+		var string =
+			/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;
 
-	Prism.languages.css = {
-		comment: /\/\*[\s\S]*?\*\//,
-		atrule: {
-			pattern: RegExp(
-				"@[\\w-](?:" +
-					/[^;{\s"']|\s+(?!\s)/.source +
-					"|" +
-					string.source +
-					")*?" +
-					/(?:;|(?=\s*\{))/.source,
-			),
-			inside: {
-				rule: /^@[\w-]+/,
-				"selector-function-argument": {
-					pattern:
-						/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,
-					lookbehind: true,
-					alias: "selector",
-				},
-				keyword: {
-					pattern: /(^|[^\w-])(?:and|not|only|or)(?![\w-])/,
-					lookbehind: true,
-				},
-				// See rest below
-			},
-		},
-		url: {
-			// https://drafts.csswg.org/css-values-3/#urls
-			pattern: RegExp(
-				"\\burl\\((?:" +
-					string.source +
-					"|" +
-					/(?:[^\\\r\n()"']|\\[\s\S])*/.source +
-					")\\)",
-				"i",
-			),
-			greedy: true,
-			inside: {
-				function: /^url/i,
-				punctuation: /^\(|\)$/,
-				string: {
-					pattern: RegExp("^" + string.source + "$"),
-					alias: "url",
+		Prism.languages.css = {
+			comment: /\/\*[\s\S]*?\*\//,
+			atrule: {
+				pattern: RegExp(
+					"@[\\w-](?:" +
+						/[^;{\s"']|\s+(?!\s)/.source +
+						"|" +
+						string.source +
+						")*?" +
+						/(?:;|(?=\s*\{))/.source,
+				),
+				inside: {
+					rule: /^@[\w-]+/,
+					"selector-function-argument": {
+						pattern:
+							/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,
+						lookbehind: true,
+						alias: "selector",
+					},
+					keyword: {
+						pattern: /(^|[^\w-])(?:and|not|only|or)(?![\w-])/,
+						lookbehind: true,
+					},
+					// See rest below
 				},
 			},
-		},
-		selector: {
-			pattern: RegExp(
-				"(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|" +
-					string.source +
-					")*(?=\\s*\\{)",
-			),
-			lookbehind: true,
-		},
-		string: {
-			pattern: string,
-			greedy: true,
-		},
-		property: {
-			pattern:
-				/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,
-			lookbehind: true,
-		},
-		important: /!important\b/i,
-		function: {
-			pattern: /(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,
-			lookbehind: true,
-		},
-		punctuation: /[(){};:,]/,
-	};
+			url: {
+				// https://drafts.csswg.org/css-values-3/#urls
+				pattern: RegExp(
+					"\\burl\\((?:" +
+						string.source +
+						"|" +
+						/(?:[^\\\r\n()"']|\\[\s\S])*/.source +
+						")\\)",
+					"i",
+				),
+				greedy: true,
+				inside: {
+					function: /^url/i,
+					punctuation: /^\(|\)$/,
+					string: {
+						pattern: RegExp("^" + string.source + "$"),
+						alias: "url",
+					},
+				},
+			},
+			selector: {
+				pattern: RegExp(
+					"(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|" +
+						string.source +
+						")*(?=\\s*\\{)",
+				),
+				lookbehind: true,
+			},
+			string: {
+				pattern: string,
+				greedy: true,
+			},
+			property: {
+				pattern:
+					/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,
+				lookbehind: true,
+			},
+			important: /!important\b/i,
+			function: {
+				pattern: /(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,
+				lookbehind: true,
+			},
+			punctuation: /[(){};:,]/,
+		};
 
-	Prism.languages.css["atrule"].inside.rest = Prism.languages.css;
+		Prism.languages.css["atrule"].inside.rest = Prism.languages.css;
 
-	var markup = Prism.languages.markup;
-	if (markup) {
-		markup.tag.addInlined("style", "css");
-		markup.tag.addAttribute("style", "css");
+		var markup = Prism.languages.markup;
+		if (markup) {
+			markup.tag.addInlined("style", "css");
+			markup.tag.addAttribute("style", "css");
+		}
 	}
-})(Prism);
+)(Prism);
 
-(function (Prism) {
+((Prism) => {
 	var string = /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/;
 	var selectorInside;
 
@@ -1567,14 +1565,14 @@ Prism.languages.sql = {
 	punctuation: /[;[\]()`,.]/,
 };
 
-(function () {
+(() => {
 	if (typeof Prism === "undefined" || typeof document === "undefined") {
 		return;
 	}
 
 	var callbacks = [];
 	var map = {};
-	var noop = function () {};
+	var noop = () => {};
 
 	Prism.plugins.toolbar = {};
 
@@ -1592,16 +1590,13 @@ Prism.languages.sql = {
 	 * @param {string} key
 	 * @param {ButtonOptions|Function} opts
 	 */
-	var registerButton = (Prism.plugins.toolbar.registerButton = function (
-		key,
-		opts,
-	) {
+	var registerButton = (Prism.plugins.toolbar.registerButton = (key, opts) => {
 		var callback;
 
 		if (typeof opts === "function") {
 			callback = opts;
 		} else {
-			callback = function (env) {
+			callback = (env) => {
 				var element;
 
 				if (typeof opts.onClick === "function") {
@@ -1663,7 +1658,7 @@ Prism.languages.sql = {
 	 *
 	 * @param env
 	 */
-	var hook = (Prism.plugins.toolbar.hook = function (env) {
+	var hook = (Prism.plugins.toolbar.hook = (env) => {
 		// Check if inline or actual code block (credit to line-numbers plugin)
 		var pre = env.element.parentNode;
 		if (!pre || !/pre/i.test(pre.nodeName)) {
@@ -1689,12 +1684,10 @@ Prism.languages.sql = {
 		var elementCallbacks = callbacks;
 		var order = getOrder(env.element);
 		if (order) {
-			elementCallbacks = order.map(function (key) {
-				return map[key] || noop;
-			});
+			elementCallbacks = order.map((key) => map[key] || noop);
 		}
 
-		elementCallbacks.forEach(function (callback) {
+		elementCallbacks.forEach((callback) => {
 			var element = callback(env);
 
 			if (!element) {
@@ -1712,7 +1705,7 @@ Prism.languages.sql = {
 		wrapper.appendChild(toolbar);
 	});
 
-	registerButton("label", function (env) {
+	registerButton("label", (env) => {
 		var pre = env.element.parentNode;
 		if (!pre || !/pre/i.test(pre.nodeName)) {
 			return;
@@ -1754,7 +1747,7 @@ Prism.languages.sql = {
 	Prism.hooks.add("complete", hook);
 })();
 
-(function () {
+(() => {
 	if (typeof Prism === "undefined" || typeof document === "undefined") {
 		return;
 	}
@@ -2047,7 +2040,7 @@ Prism.languages.sql = {
 
 	/* eslint-enable */
 
-	Prism.plugins.toolbar.registerButton("show-language", function (env) {
+	Prism.plugins.toolbar.registerButton("show-language", (env) => {
 		var pre = env.element.parentNode;
 		if (!pre || !/pre/i.test(pre.nodeName)) {
 			return;
