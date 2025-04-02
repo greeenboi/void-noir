@@ -18,13 +18,19 @@ class SQLDetectiveGame {
         
         // Game state - updated with more states
         this.gameState = {
-            scene: 'welcome', // welcome, cutscene, office, crime_scene, database
+            scene: 'welcome', // welcome, cutscene, hallway, office, database
             playerProgress: 0,
             caseSolved: false,
             cutsceneIndex: 0,
             cutsceneData: null,
             flashlightAngle: 0,
-            detectivePos: { x: 0, y: 0 }
+            detectivePos: { x: 300, y: 0 }, // Initialize detective position
+            detectiveDirection: 1,  // 1 = right, -1 = left
+            detectiveSpeed: 3,      // Walking speed
+            keyState: {             // Track keyboard input
+                left: false,
+                right: false
+            }
         };
         
         // Game assets
@@ -32,6 +38,8 @@ class SQLDetectiveGame {
             detective: null,
             couple: null,
             background: null,
+            hallway: null,
+            computer: null,
             titleFont: 'bold 70px "Film Noir"'
         };
         
@@ -48,6 +56,10 @@ class SQLDetectiveGame {
         
         // Add canvas click event
         this.gameCanvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+        
+        // Add keyboard event listeners for hallway movement
+        window.addEventListener('keydown', this.handleKeyDown.bind(this));
+        window.addEventListener('keyup', this.handleKeyUp.bind(this));
         
         // Setup Prism for syntax highlighting
         this.setupPrism();
@@ -79,6 +91,22 @@ class SQLDetectiveGame {
         backgroundImg.onload = () => {
             this.assets.background = backgroundImg;
             console.log("Background image loaded");
+        };
+        
+        // Load hallway
+        const hallwayImg = new Image();
+        hallwayImg.src = 'public/hallway.png';
+        hallwayImg.onload = () => {
+            this.assets.hallway = hallwayImg;
+            console.log("Hallway image loaded");
+        };
+        
+        // Load computer asset for hallway scene
+        const computerImg = new Image();
+        computerImg.src = 'public/computer.png';
+        computerImg.onload = () => {
+            this.assets.computer = computerImg;
+            console.log("Computer image loaded");
         };
         
         // Load custom font for title
@@ -427,8 +455,18 @@ class SQLDetectiveGame {
             gameCanvas.height = window.innerHeight;
         });
         
-        // LittleJS game initialization would go here
-        // For now, we'll just use basic canvas drawing
+        // Add keyboard listener for space key
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && this.gameState.scene === 'hallway') {
+                this.keyPressEvent = 'Space';
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                this.keyPressEvent = null;
+            }
+        });
     }
     
     gameLoop() {
@@ -468,6 +506,26 @@ class SQLDetectiveGame {
                 break;
                 
             // ...other scenes...
+        }
+    }
+    
+    handleKeyDown(e) {
+        if (this.gameState.scene !== 'hallway') return;
+        
+        if (e.key === 'ArrowLeft' || e.key === 'a') {
+            this.gameState.keyState.left = true;
+        } else if (e.key === 'ArrowRight' || e.key === 'd') {
+            this.gameState.keyState.right = true;
+        }
+    }
+    
+    handleKeyUp(e) {
+        if (this.gameState.scene !== 'hallway') return;
+        
+        if (e.key === 'ArrowLeft' || e.key === 'a') {
+            this.gameState.keyState.left = false;
+        } else if (e.key === 'ArrowRight' || e.key === 'd') {
+            this.gameState.keyState.right = false;
         }
     }
     
@@ -526,8 +584,10 @@ class SQLDetectiveGame {
         if (this.gameState.cutsceneIndex < this.gameState.cutsceneData.length - 1) {
             this.gameState.cutsceneIndex++;
         } else {
-            // Cutscene finished, move to office scene
-            this.gameState.scene = 'office';
+            // Cutscene finished, move to hallway scene instead of office
+            this.gameState.scene = 'hallway';
+            // Reset detective position to left side of hallway
+            this.gameState.detectivePos = { x: 100, y: 0 };
         }
     }
     
@@ -541,6 +601,10 @@ class SQLDetectiveGame {
                 
             case 'cutscene':
                 this.drawCutscene(width, height);
+                break;
+                
+            case 'hallway':
+                this.drawHallwayScene(width, height);
                 break;
                 
             case 'office':
@@ -768,6 +832,143 @@ class SQLDetectiveGame {
         this.ctx.fillText('Click to continue', width - 50, height - 50);
     }
     
+    drawHallwayScene(width, height) {
+        // Draw hallway background if loaded
+        if (this.assets.hallway) {
+            // Calculate dimensions to preserve aspect ratio
+            const imgAspectRatio = this.assets.hallway.width / this.assets.hallway.height;
+            const canvasAspectRatio = width / height;
+                        
+            let drawWidth = width;
+            let drawHeight = width / imgAspectRatio;
+            let offsetX = 0;
+            let offsetY = 0;
+                        
+            // If the calculated height is too small, size by height instead
+            if (drawHeight < height) {
+                drawHeight = height;
+                drawWidth = height * imgAspectRatio;
+                offsetX = (width - drawWidth) / 2;
+            } else {
+                // Center vertically if there's extra space
+                offsetY = (height - drawHeight) / 2;
+            }
+                        
+            // Draw the image preserving aspect ratio
+            this.ctx.drawImage(this.assets.hallway, offsetX, offsetY, drawWidth, drawHeight);
+        } else {
+            // Fallback background
+            this.ctx.fillStyle = '#333';
+            this.ctx.fillRect(0, 0, width, height);
+        }
+        
+        // Define hallway bounds - adjust based on your hallway image
+        const hallwayLeft = 50;
+        const hallwayRight = width - 150; // Leave some space on the right side
+        
+        // Place computer on the right side of hallway
+        const computerX = width - 200;
+        const computerY = height - 240;
+        const computerWidth = 120;
+        const computerHeight = 100;
+        
+        // Draw computer if asset loaded
+        if (this.assets.computer) {
+            this.ctx.drawImage(this.assets.computer, computerX, computerY, computerWidth, computerHeight);
+            
+            // Add slight glow effect around the computer
+            const glowSize = 3 + 2 * Math.sin(Date.now() / 300);
+            const glow = this.ctx.createRadialGradient(
+                computerX + computerWidth/2, computerY + computerHeight/2, 0,
+                computerX + computerWidth/2, computerY + computerHeight/2, computerWidth/2 + glowSize
+            );
+            glow.addColorStop(0, 'rgba(100, 180, 255, 0.2)');
+            glow.addColorStop(1, 'rgba(100, 180, 255, 0)');
+            
+            this.ctx.fillStyle = glow;
+            this.ctx.fillRect(computerX - 20, computerY - 20, computerWidth + 40, computerHeight + 40);
+        } else {
+            // Fallback if image not loaded
+            this.ctx.fillStyle = '#555';
+            this.ctx.fillRect(computerX, computerY, computerWidth, computerHeight);
+        }
+        
+        // Update detective position based on keyboard input
+        this.updateDetectivePosition(hallwayLeft, hallwayRight);
+        
+        // Get ground Y position (adjust based on your hallway image)
+        const groundY = height - 180;
+        
+        // Draw detective if asset loaded
+        if (this.assets.detective) {
+            const detectiveWidth = 120;
+            const aspectRatio = this.assets.detective.height / this.assets.detective.width;
+            const detectiveHeight = detectiveWidth * aspectRatio;
+            
+            // Flip the image if moving left
+            if (this.gameState.detectiveDirection < 0) {
+                this.ctx.save();
+                this.ctx.scale(-1, 1);
+                this.ctx.drawImage(
+                    this.assets.detective, 
+                    -this.gameState.detectivePos.x - detectiveWidth, 
+                    groundY - detectiveHeight, 
+                    detectiveWidth, 
+                    detectiveHeight
+                );
+                this.ctx.restore();
+            } else {
+                this.ctx.drawImage(
+                    this.assets.detective, 
+                    this.gameState.detectivePos.x, 
+                    groundY - detectiveHeight, 
+                    detectiveWidth, 
+                    detectiveHeight
+                );
+            }
+        } else {
+            // Fallback if image not loaded
+            this.ctx.fillStyle = 'rgba(200, 200, 200, 0.8)';
+            this.ctx.fillRect(this.gameState.detectivePos.x, groundY - 150, 100, 150);
+        }
+        
+        // Show instruction text
+        this.ctx.fillStyle = 'white';
+        this.ctx.font = '18px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.shadowBlur = 5;
+        this.ctx.shadowOffsetX = 2;
+        this.ctx.shadowOffsetY = 2;
+        this.ctx.fillText('Use arrow keys or A/D to move', width/2, 50);
+        this.ctx.fillText('Find the computer to start investigating', width/2, 80);
+        this.ctx.shadowBlur = 0;
+        
+        // Check for collision with computer
+        const detectiveRight = this.gameState.detectivePos.x + 100;
+        const detectiveLeft = this.gameState.detectivePos.x;
+        
+        // Detection area is a bit smaller than the visual for better UX
+        if (detectiveRight > computerX + 30 && detectiveLeft < computerX + computerWidth - 30) {
+            // Show interaction prompt
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = '16px Arial';
+            this.ctx.textAlign = 'center';
+            
+            const promptY = computerY - 20;
+            const pulseIntensity = 0.7 + 0.3 * Math.sin(Date.now() / 300);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${pulseIntensity})`;
+            this.ctx.fillText('Press SPACE to use computer', computerX + computerWidth/2, promptY);
+            
+            // Check for space key press
+            if (this.keyPressEvent === 'Space') {
+                this.gameState.scene = 'database';
+                this.sqlInterface.classList.remove('hidden');
+                this.keyPressEvent = null; // Reset to prevent multiple triggers
+            }
+        }
+    }
+    
     drawOfficeScene(width, height) {
         // Draw office background using the background image
         if (this.assets.background) {
@@ -830,12 +1031,37 @@ class SQLDetectiveGame {
         this.ctx.shadowBlur = 0;
     }
     
+    updateDetectivePosition(leftBound, rightBound) {
+        // Only move if we're in the hallway scene
+        if (this.gameState.scene !== 'hallway') return;
+        
+        let moveX = 0;
+        
+        if (this.gameState.keyState.left) {
+            moveX -= this.gameState.detectiveSpeed;
+            this.gameState.detectiveDirection = -1;
+        }
+        
+        if (this.gameState.keyState.right) {
+            moveX += this.gameState.detectiveSpeed;
+            this.gameState.detectiveDirection = 1;
+        }
+        
+        // Update position while respecting bounds
+        const newX = this.gameState.detectivePos.x + moveX;
+        
+        // Detective is represented by a 100px wide rectangle, account for this in bounds checking
+        if (newX >= leftBound && newX <= rightBound - 100) {
+            this.gameState.detectivePos.x = newX;
+        }
+    }
+    
     returnToOffice() {
-        this.gameState.scene = 'office';
+        this.gameState.scene = 'hallway'; // Change from 'office' to 'hallway'
         this.sqlInterface.classList.add('hidden');
         
-        // Optional: Show a transition effect
-        this.showAlert("Returning to office...", "info");
+        // Show a transition effect
+        this.showAlert("Returning to hallway...", "info");
     }
 }
 
