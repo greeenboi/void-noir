@@ -45,6 +45,8 @@ class SQLDetectiveGame {
       sounds: {
         correct: new Audio("audio/right.mp3"),
         incorrect: new Audio("audio/wrong.mp3"),
+        computerOn: new Audio("audio/computer_on.mp3"),
+        computerOff: new Audio("audio/computer_off.mp3"),
       },
     };
 
@@ -940,6 +942,7 @@ class SQLDetectiveGame {
         if (this.keyPressEvent === "Space") {
           this.gameState.scene = "database";
           this.sqlInterface.classList.remove("hidden");
+          this.playSound("computerOn");
           this.keyPressEvent = null;
         }
       }
@@ -1097,6 +1100,7 @@ class SQLDetectiveGame {
   returnToOffice() {
     this.gameState.scene = "hallway";
     this.sqlInterface.classList.add("hidden");
+    this.playSound("computerOff");
 
     if (this.gameState.portalActive) {
       this.showAlert("Return to the portal to proceed to the next challenge", "info");
