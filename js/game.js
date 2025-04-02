@@ -499,6 +499,12 @@ class SQLDetectiveGame {
   }
 
   handleKeyDown(e) {
+    // Advance cutscene when any key is pressed
+    if (this.gameState.scene === "cutscene") {
+      this.advanceCutscene();
+      return;
+    }
+
     if (this.gameState.scene !== "hallway") return;
 
     if (e.key === "ArrowLeft" || e.key === "a") {
@@ -814,7 +820,7 @@ class SQLDetectiveGame {
     this.ctx.font = "18px Arial";
     this.ctx.fillStyle = `rgba(200, 200, 200, ${pulseIntensity})`;
     this.ctx.textAlign = "right";
-    this.ctx.fillText("Click to continue", width - 50, height - 50);
+    this.ctx.fillText("Press any key to continue", width - 50, height - 50);
   }
 
   drawHallwayScene(width, height) {
