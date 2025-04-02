@@ -47,8 +47,11 @@ class SQLDetectiveGame {
         incorrect: new Audio("audio/wrong.mp3"),
         computerOn: new Audio("audio/computer_on.mp3"),
         computerOff: new Audio("audio/computer_off.mp3"),
+        walking: new Audio("audio/walking.mp3"),
       },
     };
+
+    this.isWalking = false;
 
     this.loadAssets();
 
@@ -289,11 +292,20 @@ class SQLDetectiveGame {
     this.showAlert(`SQL Error: ${error}`, "error");
   }
 
-  playSound(soundName) {
+  playSound(soundName, loop = false) {
     const sound = this.assets.sounds[soundName];
     if (sound) {
       sound.currentTime = 0;
+      sound.loop = loop;
       sound.play().catch((err) => console.error("Error playing sound:", err));
+    }
+  }
+
+  stopSound(soundName) {
+    const sound = this.assets.sounds[soundName];
+    if (sound) {
+      sound.pause();
+      sound.currentTime = 0;
     }
   }
 
@@ -449,6 +461,10 @@ class SQLDetectiveGame {
     this.gameState.scene = "transition";
     this.gameState.transitionProgress = 0;
     this.gameState.transitionDirection = direction;
+
+    // Stop walking sound when transitioning
+    this.stopSound("walking");
+    this.isWalking = false;
   }
 
   updateTransition() {
@@ -489,6 +505,11 @@ class SQLDetectiveGame {
 
     this.drawScene();
 
+    // Update walking sound if in hallway scene
+    if (this.gameState.scene === "hallway") {
+      this.updateWalkingSound();
+    }
+
     requestAnimationFrame(() => this.gameLoop());
   }
 
@@ -526,8 +547,10 @@ class SQLDetectiveGame {
 
     if (e.key === "ArrowLeft" || e.key === "a") {
       this.gameState.keyState.left = true;
+      this.updateWalkingSound();
     } else if (e.key === "ArrowRight" || e.key === "d") {
       this.gameState.keyState.right = true;
+      this.updateWalkingSound();
     }
   }
 
@@ -536,8 +559,10 @@ class SQLDetectiveGame {
 
     if (e.key === "ArrowLeft" || e.key === "a") {
       this.gameState.keyState.left = false;
+      this.updateWalkingSound();
     } else if (e.key === "ArrowRight" || e.key === "d") {
       this.gameState.keyState.right = false;
+      this.updateWalkingSound();
     }
   }
 
@@ -1097,10 +1122,26 @@ class SQLDetectiveGame {
     }
   }
 
+  updateWalkingSound() {
+    const isMoving = this.gameState.keyState.left || this.gameState.keyState.right;
+
+    if (isMoving && !this.isWalking && this.gameState.scene === "hallway") {
+      this.playSound("walking", true); // Loop the walking sound
+      this.isWalking = true;
+    } else if ((!isMoving || this.gameState.scene !== "hallway") && this.isWalking) {
+      this.stopSound("walking");
+      this.isWalking = false;
+    }
+  }
+
   returnToOffice() {
     this.gameState.scene = "hallway";
     this.sqlInterface.classList.add("hidden");
     this.playSound("computerOff");
+
+    // Make sure walking sound is stopped when returning
+    this.stopSound("walking");
+    this.isWalking = false;
 
     if (this.gameState.portalActive) {
       this.showAlert("Return to the portal to proceed to the next challenge", "info");
