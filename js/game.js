@@ -42,6 +42,7 @@ class SQLDetectiveGame {
       hallway: null,
       manSmall: null,
       revealLarge: null,
+      pointImage: null,
       titleFont: 'bold 70px "Film Noir"',
       sounds: {
         correct: new Audio("audio/right.mp3"),
@@ -54,6 +55,7 @@ class SQLDetectiveGame {
         cutscene: new Audio("audio/cutscene.mp3"),
         intro: new Audio("audio/intro.mp3"),
         finalReveal: new Audio("audio/final_reveal.mp3"),
+        victory: new Audio("audio/victory.mp3"),
       },
     };
 
@@ -62,6 +64,7 @@ class SQLDetectiveGame {
     this.cutsceneSoundPlaying = false;
     this.introSoundPlaying = false;
     this.finalRevealSoundPlaying = false;
+    this.victorySoundPlaying = false;
     this.endscreenFadeProgress = 0;
 
     this.loadAssets();
@@ -123,6 +126,13 @@ class SQLDetectiveGame {
     revealLargeImg.onload = () => {
       this.assets.revealLarge = revealLargeImg;
       console.log("Reveal large image loaded");
+    };
+
+    const pointImg = new Image();
+    pointImg.src = "public/point.png";
+    pointImg.onload = () => {
+      this.assets.pointImage = pointImg;
+      console.log("Point image loaded");
     };
 
     const font = new FontFace("Film Noir", "url(public/FilmNoir.ttf)");
@@ -449,6 +459,26 @@ class SQLDetectiveGame {
   }
 
   startEndscreenTransition() {
+    this.startInvestigationReveal();
+  }
+
+  startInvestigationReveal() {
+    this.gameState.scene = "investigationReveal";
+
+    this.stopIntroSound();
+    this.stopCutsceneSound();
+    this.stopPortalSound();
+    this.stopSound("walking");
+
+    if (!this.victorySoundPlaying) {
+      this.playSound("victory", true);
+      this.victorySoundPlaying = true;
+    }
+
+    this.sqlInterface.classList.add("hidden");
+  }
+
+  continueToEndScreen() {
     this.endscreenFadeProgress = 0;
     this.gameState.scene = "endscreen";
 
@@ -456,6 +486,7 @@ class SQLDetectiveGame {
     this.stopCutsceneSound();
     this.stopPortalSound();
     this.stopSound("walking");
+    this.stopVictorySound();
 
     this.playSound("finalReveal", true);
     this.finalRevealSoundPlaying = true;
@@ -467,6 +498,13 @@ class SQLDetectiveGame {
     if (this.finalRevealSoundPlaying) {
       this.stopSound("finalReveal");
       this.finalRevealSoundPlaying = false;
+    }
+  }
+
+  stopVictorySound() {
+    if (this.victorySoundPlaying) {
+      this.stopSound("victory");
+      this.victorySoundPlaying = false;
     }
   }
 
@@ -534,8 +572,12 @@ class SQLDetectiveGame {
     });
 
     window.addEventListener("keydown", (e) => {
-      if (e.code === "Space" && (this.gameState.scene === "hallway" || this.gameState.scene === "database")) {
-        this.keyPressEvent = "Space";
+      if (e.code === "Space") {
+        if (this.gameState.scene === "welcome") {
+          this.startCutscene();
+        } else if (this.gameState.scene === "hallway" || this.gameState.scene === "database") {
+          this.keyPressEvent = "Space";
+        }
       }
     });
 
@@ -629,6 +671,15 @@ class SQLDetectiveGame {
       this.stopPortalSound();
     }
 
+    if (this.gameState.scene === "investigationReveal") {
+      if (!this.victorySoundPlaying) {
+        this.playSound("victory", true);
+        this.victorySoundPlaying = true;
+      }
+    } else if (this.victorySoundPlaying) {
+      this.stopVictorySound();
+    }
+
     if (this.gameState.scene === "endscreen") {
       if (!this.finalRevealSoundPlaying) {
         this.playSound("finalReveal", true);
@@ -655,11 +706,14 @@ class SQLDetectiveGame {
 
     switch (this.gameState.scene) {
       case "welcome":
-        this.startCutscene();
         break;
 
       case "cutscene":
         this.advanceCutscene();
+        break;
+
+      case "investigationReveal":
+        this.continueToEndScreen();
         break;
 
       case "office":
@@ -676,8 +730,18 @@ class SQLDetectiveGame {
   }
 
   handleKeyDown(e) {
+    if (this.gameState.scene === "welcome" && e.code === "Space") {
+      this.startCutscene();
+      return;
+    }
+
     if (this.gameState.scene === "cutscene") {
       this.advanceCutscene();
+      return;
+    }
+
+    if (this.gameState.scene === "investigationReveal") {
+      this.continueToEndScreen();
       return;
     }
 
@@ -805,6 +869,10 @@ class SQLDetectiveGame {
         this.ctx.fillRect(0, 0, width, height);
         break;
 
+      case "investigationReveal":
+        this.drawInvestigationRevealScreen(width, height);
+        break;
+
       case "transition":
         this.drawTransition(width, height);
         break;
@@ -893,7 +961,7 @@ class SQLDetectiveGame {
     this.ctx.font = "28px Arial";
     this.ctx.fillStyle = `rgba(255, 255, 255, ${pulseIntensity})`;
     this.ctx.textAlign = "center";
-    this.ctx.fillText("Click to Play", width / 2, height - 100);
+    this.ctx.fillText("Press Space Bar to Play", width / 2, height - 100);
   }
 
   drawFog(width, height) {
@@ -1299,6 +1367,93 @@ class SQLDetectiveGame {
     } else {
       this.showAlert("Returning to hallway...", "info");
     }
+  }
+
+  drawInvestigationRevealScreen(width, height) {
+    this.ctx.fillStyle = "#1a1a1a";
+    this.ctx.fillRect(0, 0, width, height);
+
+    const gradient = this.ctx.createRadialGradient(width / 2, height / 2, 50, width / 2, height / 2, height);
+    gradient.addColorStop(0, "#2d2d2d");
+    gradient.addColorStop(1, "#1a1a1a");
+    this.ctx.fillStyle = gradient;
+    this.ctx.fillRect(0, 0, width, height);
+
+    if (document.fonts.check(this.assets.titleFont)) {
+      this.ctx.font = this.assets.titleFont;
+    } else {
+      this.ctx.font = "bold 50px sans-serif";
+    }
+
+    this.ctx.textAlign = "center";
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+    this.ctx.shadowBlur = 15;
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.fillText("CASE SOLVED!", width / 2, 100);
+
+    let imgX, imgY, imgWidth, imgHeight;
+
+    if (this.assets.pointImage) {
+      imgWidth = Math.min(350, width * 0.35);
+      const aspectRatio = this.assets.pointImage.height / this.assets.pointImage.width;
+      imgHeight = imgWidth * aspectRatio;
+      imgX = width * 0.65;
+      imgY = height / 2 - imgHeight / 2;
+
+      this.ctx.drawImage(this.assets.pointImage, imgX, imgY, imgWidth, imgHeight);
+
+      const spotlight = this.ctx.createRadialGradient(
+        imgX + imgWidth / 2,
+        imgY + imgHeight / 2,
+        imgWidth / 6,
+        imgX + imgWidth / 2,
+        imgY + imgHeight / 2,
+        imgWidth
+      );
+      spotlight.addColorStop(0, "rgba(255, 255, 255, 0)");
+      spotlight.addColorStop(1, "rgba(0, 0, 0, 0.5)");
+
+      this.ctx.fillStyle = spotlight;
+      this.ctx.fillRect(0, 0, width, height);
+    }
+
+    this.ctx.font = "28px Arial";
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.shadowBlur = 5;
+    this.ctx.textAlign = "left";
+
+    const textX = width * 0.15;
+    const textY = height * 0.35;
+    const lineHeight = 40;
+
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    this.ctx.fillRect(textX - 20, textY - 40, width * 0.45, 160);
+
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.fillText("I found the killer!", textX, textY);
+    this.ctx.fillText("It was Theodore Maxwell", textX, textY + lineHeight);
+    this.ctx.fillText("all along.", textX, textY + lineHeight * 2);
+
+    this.ctx.font = "22px Arial";
+    this.ctx.fillStyle = "#cccccc";
+    this.ctx.fillText("The evidence in the database clearly", textX, textY + lineHeight * 3 + 10);
+    this.ctx.fillText("points to his guilt.", textX, textY + lineHeight * 4 + 10);
+
+    this.ctx.textAlign = "center";
+    this.ctx.font = "italic 24px Arial";
+    this.ctx.fillStyle = "#ff9999";
+    this.ctx.fillText("Justice will be served.", width / 2, height - 100);
+
+    const pulseIntensity = 0.5 + 0.5 * Math.sin(Date.now() / 500);
+    this.ctx.fillStyle = `rgba(255, 255, 255, ${pulseIntensity})`;
+    this.ctx.font = "24px Arial";
+    this.ctx.fillText("Click or press any key to continue", width / 2, height - 50);
+
+    this.ctx.shadowBlur = 0;
+    this.ctx.shadowOffsetX = 0;
+    this.ctx.shadowOffsetY = 0;
   }
 
   drawEndScreen(width, height) {
