@@ -11,12 +11,27 @@
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         <div id="sqlInterface" class="hidden">
-            <div id="caseDescription"></div>
-            <div id="sqlEditor">
-                <pre class="language-sql"><code id="sqlQuery" contenteditable="true" spellcheck="false">SELECT * FROM table;</code></pre>
-                <button id="runQuery">Run Query</button>
+            <div class="interface-grid">
+                <div class="left-panel">
+                    <div id="caseDescription"></div>
+                    <div id="databaseInfo">
+                        <h4>Available Tables</h4>
+                        <pre class="language-sql"><code class="language-sql" id="sqlQuery">
+                            <div id="schemaList"></div>
+                        </code></pre>
+                    </div>
+                </div>
+                <div class="right-panel">
+                    <div id="sqlEditor">
+                        <div class="editor-container">
+                            <textarea id="sqlInput" spellcheck="false">SELECT * FROM table;</textarea>
+                            <pre class="language-sql"><code class="language-sql" id="sqlQuery"></code></pre>
+                        </div>
+                        <button id="runQuery">Run Query</button>
+                    </div>
+                    <div id="queryResult"></div>
+                </div>
             </div>
-            <div id="queryResult"></div>
         </div>
     </div>
 
@@ -24,9 +39,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@littlejs/core@0.1.0/dist/little.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js" type="module"></script>
     
-    <!-- Prism.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <!-- Prism.js - load synchronously -->
+    <script src="prism.js"></script>
+    <script>
+        if (typeof Prism === 'undefined') {
+            console.error('Prism failed to load!');
+        }
+    </script>
     
     <!-- Game scripts -->
     <script src="js/database.js" type="module"></script>

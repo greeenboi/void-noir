@@ -42,21 +42,38 @@ class SQLDetectiveGame {
     }
     
     setupPrism() {
+        if (typeof Prism === 'undefined') {
+            console.error('Prism is not loaded!');
+            return;
+        }
+        
+        this.sqlInput = document.getElementById('sqlInput');
         this.sqlEditor = document.getElementById('sqlQuery');
-        
-        // Highlight initial content
-        Prism.highlightElement(this.sqlEditor);
-        
-        // Rehighlight on input
-        this.sqlEditor.addEventListener('input', () => {
+
+        const updateHighlight = () => {
+            // Copy content to the code element
+            this.sqlEditor.textContent = this.sqlInput.value;
+            // Re-highlight
             Prism.highlightElement(this.sqlEditor);
-        });
-        
+        };
+
+        // Initial highlight
+        updateHighlight();
+
+        // Update on any input
+        this.sqlInput.addEventListener('input', updateHighlight);
+        this.sqlInput.addEventListener('change', updateHighlight);
+        this.sqlInput.addEventListener('keyup', updateHighlight);
+
         // Handle tab key
-        this.sqlEditor.addEventListener('keydown', (e) => {
+        this.sqlInput.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 e.preventDefault();
-                document.execCommand('insertText', false, '    ');
+                const start = this.sqlInput.selectionStart;
+                const end = this.sqlInput.selectionEnd;
+                this.sqlInput.value = `${this.sqlInput.value.substring(0, start)}    ${this.sqlInput.value.substring(end)}`;
+                this.sqlInput.selectionStart = this.sqlInput.selectionEnd = start + 4;
+                updateHighlight();
             }
         });
     }
@@ -97,16 +114,45 @@ class SQLDetectiveGame {
         
         const challenge = this.currentCase.challenges[this.currentChallengeIndex];
         
+        // Update case description
         this.caseDescription.innerHTML = `
             <h3>${this.currentCase.title}</h3>
             <p>${this.currentCase.description}</p>
-            <p><strong>Your task:</strong> ${challenge.question}</p>
-            <p><em>Hint: ${challenge.hint}</em></p>
+            <div class="briefing">
+                <strong>Detective's Briefing:</strong>
+                <p>${this.currentCase.briefing}</p>
+            </div>
+            <div class="task">
+                <strong>Current Task:</strong>
+                <p>${challenge.question}</p>
+            </div>
+            <div class="hint">
+                <strong>Hint:</strong>
+                <p>${challenge.hint}</p>
+            </div>
         `;
+
+        // Update schema information
+        const schemaList = document.getElementById('schemaList');
+        schemaList.innerHTML = this.currentCase.tables.map(table => `
+            <div class="schema-item">
+                <h5>${table.name}</h5>
+                <pre>${this.formatCreateStatement(table.createStatement)}</pre>
+            </div>
+        `).join('');
+    }
+
+    formatCreateStatement(sql) {
+        // Basic SQL formatting for better readability
+        return sql
+            .replace(/\(/g, '\n  (')
+            .replace(/,/g, ',\n   ')
+            .replace(/\)/g, '\n  )')
+            .trim();
     }
     
     async executeQuery() {
-        const query = this.sqlEditor.textContent.trim();
+        const query = this.sqlInput.value.trim();
         if (!query) {
             this.showMessage("Please enter a SQL query");
             return;

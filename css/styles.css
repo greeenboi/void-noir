@@ -40,31 +40,130 @@ body, html {
     display: none;
 }
 
-#caseDescription {
-    padding: 10px;
-    background-color: #333;
+.interface-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    height: 80vh;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 100%;
+}
+
+#databaseInfo {
+    background: #333;
+    padding: 15px;
     border-radius: 5px;
-    margin-bottom: 10px;
-    flex: 0 0 auto;
+}
+
+#schemaList {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 12px;
+    color: #ddd;
+}
+
+.schema-item {
+    margin-bottom: 15px;
+}
+
+.schema-item h5 {
+    color: #4285f4;
+    margin: 0 0 5px 0;
+}
+
+.schema-item pre {
+    margin: 0;
+    padding: 8px;
+    background: #2d2d2d;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+#caseDescription {
+    background: #333;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+#caseDescription .briefing {
+    padding: 10px;
+    background: #2d2d2d;
+    border-left: 3px solid #4285f4;
+    margin: 10px 0;
+}
+
+#caseDescription .task {
+    padding: 10px;
+    background: #2d2d2d;
+    border-left: 3px solid #50fa7b;
+    margin: 10px 0;
+}
+
+#caseDescription .hint {
+    padding: 10px;
+    background: #2d2d2d;
+    border-left: 3px solid #ff79c6;
+    margin: 10px 0;
 }
 
 #sqlEditor {
     margin-bottom: 20px;
 }
 
-#sqlEditor pre {
-    margin: 0;
-    padding: 10px;
+#sqlEditor .editor-container {
+    position: relative;
+    margin-bottom: 10px;
     background: #2d2d2d;
     border-radius: 4px;
     min-height: 100px;
-    max-height: 300px;
-    overflow-y: auto;
 }
 
-#sqlEditor pre:focus {
+#sqlInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 1em;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.8);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    resize: none;
+    z-index: 1;
+}
+
+#sqlInput:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #4285f4;
+}
+
+#sqlEditor pre {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    pointer-events: none;
+}
+
+#sqlEditor code {
+    display: block;
+    margin: 0;
+    padding: 1em;
+    background: transparent !important;
 }
 
 #sqlQuery {
@@ -72,6 +171,13 @@ body, html {
     font-size: 14px;
     line-height: 1.4;
     white-space: pre-wrap;
+}
+
+/* Make highlighted code visible through textarea */
+.token {
+    color: inherit;
+    text-shadow: 0 0 0.01px currentColor;
+    font-weight: bold;
 }
 
 .token.keyword {
