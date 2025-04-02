@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Detective</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="sqlInterface" class="hidden">
+            <div id="caseDescription"></div>
+            <div id="sqlEditor">
+                <pre class="language-sql"><code id="sqlQuery" contenteditable="true" spellcheck="false">SELECT * FROM table;</code></pre>
+                <button id="runQuery">Run Query</button>
+            </div>
+            <div id="queryResult"></div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@littlejs/core@0.1.0/dist/little.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js" type="module"></script>
+    
+    <!-- Prism.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    
+    <!-- Game scripts -->
+    <script src="js/database.js" type="module"></script>
+    <script src="js/cases.js" type="module"></script>
+    <script src="js/game.js" type="module"></script>
+</body>
+</html>

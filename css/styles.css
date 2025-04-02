@@ -1,0 +1,133 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    font-family: 'Arial', sans-serif;
+    color: #f0f0f0;
+}
+
+#gameContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#sqlInterface {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1000px;
+    border-radius: 8px;
+}
+
+#sqlInterface.hidden {
+    display: none;
+}
+
+#caseDescription {
+    padding: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    flex: 0 0 auto;
+}
+
+#sqlEditor {
+    margin-bottom: 20px;
+}
+
+#sqlEditor pre {
+    margin: 0;
+    padding: 10px;
+    background: #2d2d2d;
+    border-radius: 4px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#sqlEditor pre:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #4285f4;
+}
+
+#sqlQuery {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.token.keyword {
+    color: #ff79c6;
+}
+
+.token.function {
+    color: #50fa7b;
+}
+
+.token.string {
+    color: #f1fa8c;
+}
+
+.token.number {
+    color: #bd93f9;
+}
+
+.token.operator {
+    color: #ff79c6;
+}
+
+#runQuery {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#runQuery:hover {
+    background: #3367d6;
+}
+
+#queryResult {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+#queryResult table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#queryResult th, #queryResult td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#queryResult th {
+    background: rgba(255, 255, 255, 0.1);
+}
