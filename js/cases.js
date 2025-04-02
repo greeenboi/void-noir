@@ -215,239 +215,239 @@ const gameCases = [
 				},
 				difficulty: "medium",
 			},
-			{
-				question:
-					"Find out who was in the Hunting Trophy Room when the shot was fired, combining data from multiple tables",
-				hint: "Use JOINs to connect guests, access_logs, and security_zones tables",
-				solution: `
-                    SELECT g.name, g.relationship, al.timestamp, al.access_type, sz.zone_name
-                    FROM guests g
-                    JOIN access_logs al ON g.guest_id = al.guest_id
-                    JOIN security_zones sz ON al.zone_id = sz.zone_id
-                    WHERE sz.zone_name = 'Hunting Trophy Room'
-                    AND al.timestamp BETWEEN '2023-06-15 14:25:00' AND '2023-06-15 14:30:00'
-                `,
-				validateFn: (result, expectedResult) => {
-					return (
-						result.rows.length > 0 &&
-						result.rows.some(
-							(r) =>
-								r.name.includes("Theodore") || r.name.includes("Detective"),
-						)
-					);
-				},
-				difficulty: "hard",
-			},
+			// {
+			// 	question:
+			// 		"Find out who was in the Hunting Trophy Room when the shot was fired, combining data from multiple tables",
+			// 	hint: "Use JOINs to connect guests, access_logs, and security_zones tables",
+			// 	solution: `
+            //         SELECT g.name, g.relationship, al.timestamp, al.access_type, sz.zone_name
+            //         FROM guests g
+            //         JOIN access_logs al ON g.guest_id = al.guest_id
+            //         JOIN security_zones sz ON al.zone_id = sz.zone_id
+            //         WHERE sz.zone_name = 'Hunting Trophy Room'
+            //         AND al.timestamp BETWEEN '2023-06-15 14:25:00' AND '2023-06-15 14:30:00'
+            //     `,
+			// 	validateFn: (result, expectedResult) => {
+			// 		return (
+			// 			result.rows.length > 0 &&
+			// 			result.rows.some(
+			// 				(r) =>
+			// 					r.name.includes("Theodore") || r.name.includes("Detective"),
+			// 			)
+			// 		);
+			// 	},
+			// 	difficulty: "hard",
+			// },
 		],
 
 		conclusion:
 			"Based on your investigation of the security logs, you've managed to successfully frame Theodore Maxwell, the bride's uncle. The evidence suggests he was in the Hunting Trophy Room shortly before a loud noise alert, then exited through the Main House. Perfect! No one will ever suspect it was you who fired that warning shot to remind the happy couple of your unfinished business. Your work here is only beginning...",
 	},
 
-	{
-		id: 2,
-		title: "Skeletons in the Trophy Room: Hunt the Hunter",
-		description:
-			"After successfully framing Theodore Maxwell for the gunshot incident, the persistent bride has hired a 'real detective' to review your investigation. Time to cover your tracks... while planting a few new ones.",
+	// {
+	// 	id: 2,
+	// 	title: "Skeletons in the Trophy Room: Hunt the Hunter",
+	// 	description:
+	// 		"After successfully framing Theodore Maxwell for the gunshot incident, the persistent bride has hired a 'real detective' to review your investigation. Time to cover your tracks... while planting a few new ones.",
 
-		briefing:
-			"A forensic expert has been called in to verify your findings. Access the mansion's additional databases to further implicate Theodore Maxwell and ensure your own involvement remains hidden. Nothing says 'happy wedding' like a family member behind bars!",
+	// 	briefing:
+	// 		"A forensic expert has been called in to verify your findings. Access the mansion's additional databases to further implicate Theodore Maxwell and ensure your own involvement remains hidden. Nothing says 'happy wedding' like a family member behind bars!",
 
-		tables: [
-			{
-				name: "family_relationships",
-				createStatement: `CREATE TABLE family_relationships (
-                      relationship_id INTEGER PRIMARY KEY,
-                      person1_id INTEGER,
-                      person2_id INTEGER,
-                      relationship_type TEXT NOT NULL,
-                      notes TEXT
-                  )`,
-				insertStatements: [
-					`INSERT INTO family_relationships VALUES (1, 3, NULL, 'Previous Marriage', 'Theodore was married to the late heiress Victoria Maxwell')`,
-					`INSERT INTO family_relationships VALUES (2, 3, 5, 'Business Rivalry', 'Theodore and Richard have competing businesses')`,
-					`INSERT INTO family_relationships VALUES (3, 4, NULL, 'Previous Engagement', 'Isabella was previously engaged to the groom')`,
-					`INSERT INTO family_relationships VALUES (4, 5, NULL, 'Business Partner', 'Richard is the groom\'s current business partner')`,
-					`INSERT INTO family_relationships VALUES (5, 3, 8, 'Lawsuit', 'Theodore is currently suing Alexandra over property boundaries')`,
-				],
-			},
-			{
-				name: "financial_transactions",
-				createStatement: `CREATE TABLE financial_transactions (
-                      transaction_id INTEGER PRIMARY KEY,
-                      person_id INTEGER,
-                      transaction_type TEXT NOT NULL,
-                      amount DECIMAL(10,2) NOT NULL,
-                      transaction_date DATE NOT NULL,
-                      description TEXT
-                  )`,
-				insertStatements: [
-					`INSERT INTO financial_transactions VALUES (1, 3, 'Withdrawal', 50000.00, '2023-06-10', 'Large cash withdrawal')`,
-					`INSERT INTO financial_transactions VALUES (2, 3, 'Purchase', 4500.00, '2023-06-12', 'Antique shop purchase')`,
-					`INSERT INTO financial_transactions VALUES (3, 5, 'Wire Transfer', 75000.00, '2023-06-08', 'International wire transfer')`,
-					`INSERT INTO financial_transactions VALUES (4, 5, 'Deposit', 100000.00, '2023-06-13', 'Business proceeds')`,
-					`INSERT INTO financial_transactions VALUES (5, 4, 'Purchase', 2500.00, '2023-06-11', 'Designer dress purchase')`,
-					`INSERT INTO financial_transactions VALUES (6, 8, 'Withdrawal', 15000.00, '2023-06-14', 'Cash withdrawal')`,
-					`INSERT INTO financial_transactions VALUES (7, 13, 'Deposit', 10000.00, '2023-06-01', 'Payment for services')`,
-				],
-			},
-			{
-				name: "gift_registry",
-				createStatement: `CREATE TABLE gift_registry (
-                      gift_id INTEGER PRIMARY KEY,
-                      guest_id INTEGER,
-                      gift_description TEXT NOT NULL,
-                      estimated_value DECIMAL(10,2),
-                      status TEXT NOT NULL
-                  )`,
-				insertStatements: [
-					`INSERT INTO gift_registry VALUES (1, 1, 'Silver Cutlery Set', 1200.00, 'Received')`,
-					`INSERT INTO gift_registry VALUES (2, 2, 'Crystal Vase', 800.00, 'Received')`,
-					`INSERT INTO gift_registry VALUES (3, 3, 'Family Heirloom Painting', 75000.00, 'Promised')`,
-					`INSERT INTO gift_registry VALUES (4, 4, 'Designer Throw Pillows', 500.00, 'Received')`,
-					`INSERT INTO gift_registry VALUES (5, 5, 'Investment Portfolio Share', 100000.00, 'Pending')`,
-					`INSERT INTO gift_registry VALUES (6, 8, 'Vacation Property Timeshare', 25000.00, 'Contested')`,
-				],
-			},
-			{
-				name: "personal_items",
-				createStatement: `CREATE TABLE personal_items (
-                      item_id INTEGER PRIMARY KEY,
-                      owner_id INTEGER,
-                      item_type TEXT NOT NULL,
-                      description TEXT NOT NULL,
-                      brought_to_wedding INTEGER
-                  )`,
-				insertStatements: [
-					`INSERT INTO personal_items VALUES (1, 3, 'Weapon', 'Antique Family Pistol', 1)`,
-					`INSERT INTO personal_items VALUES (2, 3, 'Jewelry', 'Gold Pocket Watch', 1)`,
-					`INSERT INTO personal_items VALUES (3, 5, 'Document', 'Contract Papers', 1)`,
-					`INSERT INTO personal_items VALUES (4, 4, 'Accessory', 'Designer Handbag', 1)`,
-					`INSERT INTO personal_items VALUES (5, 8, 'Document', 'Property Deed', 1)`,
-					`INSERT INTO personal_items VALUES (6, 11, 'Weapon', 'Security Firearm', 1)`,
-					`INSERT INTO personal_items VALUES (7, 13, 'Weapon', 'Service Revolver', 1)`,
-					`INSERT INTO personal_items VALUES (8, 13, 'Document', 'Past Case Files', 1)`,
-				],
-			},
-			{
-				name: "evidence_log",
-				createStatement: `CREATE TABLE evidence_log (
-                      evidence_id INTEGER PRIMARY KEY,
-                      item_description TEXT NOT NULL,
-                      location_found TEXT NOT NULL,
-                      collection_time TIMESTAMP NOT NULL,
-                      handler_id INTEGER,
-                      notes TEXT
-                  )`,
-				insertStatements: [
-					`INSERT INTO evidence_log VALUES (1, 'Shell Casing', 'Hunting Trophy Room', '2023-06-15 15:00:00', 13, 'Standard 9mm, wiped of prints')`,
-					`INSERT INTO evidence_log VALUES (2, 'Gunpowder Residue', 'Trophy Room Gun Cabinet', '2023-06-15 15:15:00', 13, 'Consistent with recent discharge')`,
-					`INSERT INTO evidence_log VALUES (3, 'Fingerprints', 'Trophy Room Door Handle', '2023-06-15 15:30:00', 13, 'Partial prints, possibly Theodore Maxwell\'s')`,
-					`INSERT INTO evidence_log VALUES (4, 'Security Footage', 'Main House Corridor', '2023-06-15 16:00:00', 11, '30 seconds missing around 14:28-14:29')`,
-					`INSERT INTO evidence_log VALUES (5, 'Handkerchief', 'Behind Trophy Room Cabinet', '2023-06-15 16:15:00', 13, 'Monogrammed "TM", suspect planted')`,
-				],
-			},
-			{
-				name: "investigator_notes",
-				createStatement: `CREATE TABLE investigator_notes (
-                      note_id INTEGER PRIMARY KEY,
-                      investigator_id INTEGER,
-                      timestamp TIMESTAMP NOT NULL,
-                      note_text TEXT NOT NULL,
-                      case_relevant INTEGER
-                  )`,
-				insertStatements: [
-					`INSERT INTO investigator_notes VALUES (1, 13, '2023-06-15 13:00:00', 'Wedding security job. Easy money with bonus opportunity.', 1)`,
-					`INSERT INTO investigator_notes VALUES (2, 13, '2023-06-15 14:00:00', 'Groom seems nervous. Probably remembers our previous encounter.', 1)`,
-					`INSERT INTO investigator_notes VALUES (3, 13, '2023-06-15 14:15:00', 'Uncle Theodore keeps wandering. Perfect patsy.', 1)`,
-					`INSERT INTO investigator_notes VALUES (4, 13, '2023-06-15 14:50:00', 'Mission accomplished. Sent a message without leaving evidence.', 1)`,
-					`INSERT INTO investigator_notes VALUES (5, 13, '2023-06-15 16:30:00', 'All evidence points to Theodore. My tracks covered. Payback served.', 1)`,
-				],
-			},
-		],
+	// 	tables: [
+	// 		{
+	// 			name: "family_relationships",
+	// 			createStatement: `CREATE TABLE family_relationships (
+    //                   relationship_id INTEGER PRIMARY KEY,
+    //                   person1_id INTEGER,
+    //                   person2_id INTEGER,
+    //                   relationship_type TEXT NOT NULL,
+    //                   notes TEXT
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO family_relationships VALUES (1, 3, NULL, 'Previous Marriage', 'Theodore was married to the late heiress Victoria Maxwell')`,
+	// 				`INSERT INTO family_relationships VALUES (2, 3, 5, 'Business Rivalry', 'Theodore and Richard have competing businesses')`,
+	// 				`INSERT INTO family_relationships VALUES (3, 4, NULL, 'Previous Engagement', 'Isabella was previously engaged to the groom')`,
+	// 				`INSERT INTO family_relationships VALUES (4, 5, NULL, 'Business Partner', 'Richard is the groom\'s current business partner')`,
+	// 				`INSERT INTO family_relationships VALUES (5, 3, 8, 'Lawsuit', 'Theodore is currently suing Alexandra over property boundaries')`,
+	// 			],
+	// 		},
+	// 		{
+	// 			name: "financial_transactions",
+	// 			createStatement: `CREATE TABLE financial_transactions (
+    //                   transaction_id INTEGER PRIMARY KEY,
+    //                   person_id INTEGER,
+    //                   transaction_type TEXT NOT NULL,
+    //                   amount DECIMAL(10,2) NOT NULL,
+    //                   transaction_date DATE NOT NULL,
+    //                   description TEXT
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO financial_transactions VALUES (1, 3, 'Withdrawal', 50000.00, '2023-06-10', 'Large cash withdrawal')`,
+	// 				`INSERT INTO financial_transactions VALUES (2, 3, 'Purchase', 4500.00, '2023-06-12', 'Antique shop purchase')`,
+	// 				`INSERT INTO financial_transactions VALUES (3, 5, 'Wire Transfer', 75000.00, '2023-06-08', 'International wire transfer')`,
+	// 				`INSERT INTO financial_transactions VALUES (4, 5, 'Deposit', 100000.00, '2023-06-13', 'Business proceeds')`,
+	// 				`INSERT INTO financial_transactions VALUES (5, 4, 'Purchase', 2500.00, '2023-06-11', 'Designer dress purchase')`,
+	// 				`INSERT INTO financial_transactions VALUES (6, 8, 'Withdrawal', 15000.00, '2023-06-14', 'Cash withdrawal')`,
+	// 				`INSERT INTO financial_transactions VALUES (7, 13, 'Deposit', 10000.00, '2023-06-01', 'Payment for services')`,
+	// 			],
+	// 		},
+	// 		{
+	// 			name: "gift_registry",
+	// 			createStatement: `CREATE TABLE gift_registry (
+    //                   gift_id INTEGER PRIMARY KEY,
+    //                   guest_id INTEGER,
+    //                   gift_description TEXT NOT NULL,
+    //                   estimated_value DECIMAL(10,2),
+    //                   status TEXT NOT NULL
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO gift_registry VALUES (1, 1, 'Silver Cutlery Set', 1200.00, 'Received')`,
+	// 				`INSERT INTO gift_registry VALUES (2, 2, 'Crystal Vase', 800.00, 'Received')`,
+	// 				`INSERT INTO gift_registry VALUES (3, 3, 'Family Heirloom Painting', 75000.00, 'Promised')`,
+	// 				`INSERT INTO gift_registry VALUES (4, 4, 'Designer Throw Pillows', 500.00, 'Received')`,
+	// 				`INSERT INTO gift_registry VALUES (5, 5, 'Investment Portfolio Share', 100000.00, 'Pending')`,
+	// 				`INSERT INTO gift_registry VALUES (6, 8, 'Vacation Property Timeshare', 25000.00, 'Contested')`,
+	// 			],
+	// 		},
+	// 		{
+	// 			name: "personal_items",
+	// 			createStatement: `CREATE TABLE personal_items (
+    //                   item_id INTEGER PRIMARY KEY,
+    //                   owner_id INTEGER,
+    //                   item_type TEXT NOT NULL,
+    //                   description TEXT NOT NULL,
+    //                   brought_to_wedding INTEGER
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO personal_items VALUES (1, 3, 'Weapon', 'Antique Family Pistol', 1)`,
+	// 				`INSERT INTO personal_items VALUES (2, 3, 'Jewelry', 'Gold Pocket Watch', 1)`,
+	// 				`INSERT INTO personal_items VALUES (3, 5, 'Document', 'Contract Papers', 1)`,
+	// 				`INSERT INTO personal_items VALUES (4, 4, 'Accessory', 'Designer Handbag', 1)`,
+	// 				`INSERT INTO personal_items VALUES (5, 8, 'Document', 'Property Deed', 1)`,
+	// 				`INSERT INTO personal_items VALUES (6, 11, 'Weapon', 'Security Firearm', 1)`,
+	// 				`INSERT INTO personal_items VALUES (7, 13, 'Weapon', 'Service Revolver', 1)`,
+	// 				`INSERT INTO personal_items VALUES (8, 13, 'Document', 'Past Case Files', 1)`,
+	// 			],
+	// 		},
+	// 		{
+	// 			name: "evidence_log",
+	// 			createStatement: `CREATE TABLE evidence_log (
+    //                   evidence_id INTEGER PRIMARY KEY,
+    //                   item_description TEXT NOT NULL,
+    //                   location_found TEXT NOT NULL,
+    //                   collection_time TIMESTAMP NOT NULL,
+    //                   handler_id INTEGER,
+    //                   notes TEXT
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO evidence_log VALUES (1, 'Shell Casing', 'Hunting Trophy Room', '2023-06-15 15:00:00', 13, 'Standard 9mm, wiped of prints')`,
+	// 				`INSERT INTO evidence_log VALUES (2, 'Gunpowder Residue', 'Trophy Room Gun Cabinet', '2023-06-15 15:15:00', 13, 'Consistent with recent discharge')`,
+	// 				`INSERT INTO evidence_log VALUES (3, 'Fingerprints', 'Trophy Room Door Handle', '2023-06-15 15:30:00', 13, 'Partial prints, possibly Theodore Maxwell\'s')`,
+	// 				`INSERT INTO evidence_log VALUES (4, 'Security Footage', 'Main House Corridor', '2023-06-15 16:00:00', 11, '30 seconds missing around 14:28-14:29')`,
+	// 				`INSERT INTO evidence_log VALUES (5, 'Handkerchief', 'Behind Trophy Room Cabinet', '2023-06-15 16:15:00', 13, 'Monogrammed "TM", suspect planted')`,
+	// 			],
+	// 		},
+	// 		{
+	// 			name: "investigator_notes",
+	// 			createStatement: `CREATE TABLE investigator_notes (
+    //                   note_id INTEGER PRIMARY KEY,
+    //                   investigator_id INTEGER,
+    //                   timestamp TIMESTAMP NOT NULL,
+    //                   note_text TEXT NOT NULL,
+    //                   case_relevant INTEGER
+    //               )`,
+	// 			insertStatements: [
+	// 				`INSERT INTO investigator_notes VALUES (1, 13, '2023-06-15 13:00:00', 'Wedding security job. Easy money with bonus opportunity.', 1)`,
+	// 				`INSERT INTO investigator_notes VALUES (2, 13, '2023-06-15 14:00:00', 'Groom seems nervous. Probably remembers our previous encounter.', 1)`,
+	// 				`INSERT INTO investigator_notes VALUES (3, 13, '2023-06-15 14:15:00', 'Uncle Theodore keeps wandering. Perfect patsy.', 1)`,
+	// 				`INSERT INTO investigator_notes VALUES (4, 13, '2023-06-15 14:50:00', 'Mission accomplished. Sent a message without leaving evidence.', 1)`,
+	// 				`INSERT INTO investigator_notes VALUES (5, 13, '2023-06-15 16:30:00', 'All evidence points to Theodore. My tracks covered. Payback served.', 1)`,
+	// 			],
+	// 		},
+	// 	],
 
-		challenges: [
-			{
-				question: "List all weapons brought to the wedding",
-				hint: "Use a simple SELECT statement",
-				solution: `
-                    SELECT description, item_type
-                    FROM personal_items
-                    WHERE item_type = 'Weapon'
-                `,
-				validateFn: (result, expectedResult) => {
-					return (
-						result.rows.length === 3 &&
-						result.rows.every((r) => r.item_type === "Weapon")
-					);
-				},
-				difficulty: "easy",
-			},
-			{
-				question: "Find all financial transactions over $20,000",
-				hint: "Use a SELECT with a WHERE clause",
-				solution: `
-                    SELECT transaction_type, amount, description, transaction_date
-                    FROM financial_transactions
-                    WHERE amount > 20000
-                `,
-				validateFn: (result, expectedResult) => {
-					return (
-						result.rows.length >= 3 &&
-						result.rows.every((r) => Number.parseFloat(r.amount) > 20000)
-					);
-				},
-				difficulty: "easy",
-			},
-			{
-				question:
-					"List all evidence collected from the Trophy Room, sorted by collection time",
-				hint: "Use SELECT with WHERE and ORDER BY clauses",
-				solution: `
-                    SELECT item_description, collection_time, handler_id, notes
-                    FROM evidence_log
-                    WHERE location_found LIKE '%Trophy Room%'
-                    ORDER BY collection_time
-                `,
-				validateFn: (result, expectedResult) => {
-					const times = result.rows.map((r) => new Date(r.collection_time));
+	// 	challenges: [
+	// 		{
+	// 			question: "List all weapons brought to the wedding",
+	// 			hint: "Use a simple SELECT statement",
+	// 			solution: `
+    //                 SELECT description, item_type
+    //                 FROM personal_items
+    //                 WHERE item_type = 'Weapon'
+    //             `,
+	// 			validateFn: (result, expectedResult) => {
+	// 				return (
+	// 					result.rows.length === 3 &&
+	// 					result.rows.every((r) => r.item_type === "Weapon")
+	// 				);
+	// 			},
+	// 			difficulty: "easy",
+	// 		},
+	// 		{
+	// 			question: "Find all financial transactions over $20,000",
+	// 			hint: "Use a SELECT with a WHERE clause",
+	// 			solution: `
+    //                 SELECT transaction_type, amount, description, transaction_date
+    //                 FROM financial_transactions
+    //                 WHERE amount > 20000
+    //             `,
+	// 			validateFn: (result, expectedResult) => {
+	// 				return (
+	// 					result.rows.length >= 3 &&
+	// 					result.rows.every((r) => Number.parseFloat(r.amount) > 20000)
+	// 				);
+	// 			},
+	// 			difficulty: "easy",
+	// 		},
+	// 		{
+	// 			question:
+	// 				"List all evidence collected from the Trophy Room, sorted by collection time",
+	// 			hint: "Use SELECT with WHERE and ORDER BY clauses",
+	// 			solution: `
+    //                 SELECT item_description, collection_time, handler_id, notes
+    //                 FROM evidence_log
+    //                 WHERE location_found LIKE '%Trophy Room%'
+    //                 ORDER BY collection_time
+    //             `,
+	// 			validateFn: (result, expectedResult) => {
+	// 				const times = result.rows.map((r) => new Date(r.collection_time));
 
-					const isOrdered = times.every(
-						(time, i) => i === 0 || time >= times[i - 1],
-					);
+	// 				const isOrdered = times.every(
+	// 					(time, i) => i === 0 || time >= times[i - 1],
+	// 				);
 
-					return result.rows.length >= 2 && isOrdered;
-				},
-				difficulty: "medium",
-			},
-			{
-				question:
-					"Connect Theodore Maxwell's personal items with his financial transactions and movements in the mansion",
-				hint: "Use JOINs to connect multiple tables",
-				solution: `
-                    SELECT g.name, pi.description as item, ft.amount, ft.transaction_type, 
-                           sz.zone_name, al.timestamp
-                    FROM guests g
-                    JOIN personal_items pi ON g.guest_id = pi.owner_id
-                    JOIN financial_transactions ft ON g.guest_id = ft.person_id
-                    JOIN access_logs al ON g.guest_id = al.guest_id
-                    JOIN security_zones sz ON al.zone_id = sz.zone_id
-                    WHERE g.name = 'Theodore Maxwell'
-                    AND sz.zone_name = 'Hunting Trophy Room'
-                `,
-				validateFn: (result, expectedResult) => {
-					return (
-						result.rows.length > 0 &&
-						result.rows.some((r) => r.item && r.amount && r.zone_name)
-					);
-				},
-				difficulty: "hard",
-			},
-		],
+	// 				return result.rows.length >= 2 && isOrdered;
+	// 			},
+	// 			difficulty: "medium",
+	// 		},
+	// 		{
+	// 			question:
+	// 				"Connect Theodore Maxwell's personal items with his financial transactions and movements in the mansion",
+	// 			hint: "Use JOINs to connect multiple tables",
+	// 			solution: `
+    //                 SELECT g.name, pi.description as item, ft.amount, ft.transaction_type, 
+    //                        sz.zone_name, al.timestamp
+    //                 FROM guests g
+    //                 JOIN personal_items pi ON g.guest_id = pi.owner_id
+    //                 JOIN financial_transactions ft ON g.guest_id = ft.person_id
+    //                 JOIN access_logs al ON g.guest_id = al.guest_id
+    //                 JOIN security_zones sz ON al.zone_id = sz.zone_id
+    //                 WHERE g.name = 'Theodore Maxwell'
+    //                 AND sz.zone_name = 'Hunting Trophy Room'
+    //             `,
+	// 			validateFn: (result, expectedResult) => {
+	// 				return (
+	// 					result.rows.length > 0 &&
+	// 					result.rows.some((r) => r.item && r.amount && r.zone_name)
+	// 				);
+	// 			},
+	// 			difficulty: "hard",
+	// 		},
+	// 	],
 
-		conclusion:
-			"Excellent work planting additional evidence against Theodore Maxwell! Your expert manipulation of the evidence log and security records has thoroughly convinced everyone of his guilt. The bride and groom remain oblivious to your real connection to their past and your true motives. As Theodore faces serious accusations, you walk away with both your revenge and your reputation intact. Perhaps they'll think twice before crossing a detective next time. Case closed...for now.",
-	},
+	// 	conclusion:
+	// 		"Excellent work planting additional evidence against Theodore Maxwell! Your expert manipulation of the evidence log and security records has thoroughly convinced everyone of his guilt. The bride and groom remain oblivious to your real connection to their past and your true motives. As Theodore faces serious accusations, you walk away with both your revenge and your reputation intact. Perhaps they'll think twice before crossing a detective next time. Case closed...for now.",
+	// },
 ];
 
 export default gameCases;
