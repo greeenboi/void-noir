@@ -376,7 +376,7 @@ const gameCases = [
           // Check if we found the large transactions
           return (
             result.rows.length >= 3 && // At least 3 large transactions
-            result.rows.every((r) => parseFloat(r.amount) > 20000)
+            result.rows.every((r) => Number.parseFloat(r.amount) > 20000)
           );
         },
         difficulty: "easy",
