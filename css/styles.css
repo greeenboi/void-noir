@@ -660,6 +660,38 @@ body, html {
     height: 24px;
 }
 
+/* Portal effect and transitions */
+@keyframes portalGlow {
+    0% { box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5); }
+    50% { box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.8); }
+    100% { box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.5); }
+}
+
+.portal {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,220,255,0.9));
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    animation: portalGlow 3s infinite;
+}
+
+@keyframes screenFlash {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.screen-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 1000;
+    pointer-events: none;
+    animation: screenFlash 1s forwards;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1100px) {
     .interface-grid {
